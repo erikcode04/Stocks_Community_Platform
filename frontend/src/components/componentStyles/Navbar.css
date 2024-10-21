@@ -1,10 +1,15 @@
+/* Apply box-sizing to all elements */
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     padding: 0;
-  }
-  
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
 
-#nav-container{
+#nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -14,10 +19,39 @@ body {
     position: sticky;
     width: 100%;
     z-index: 100;
-   height: 70px;
+    height: 70px;
 }
 
-#nav-list{
+#nav-logoContainer {
+    margin-left: 0;
+    width: 20%;
+    height: 100%;
+}
+
+#nav-homeLink {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    height: 100%;
+    background-color: #f8f9fa;
+    text-decoration: none;
+}
+
+#nav-homeLinkText {
+    font-size: 1.7em;
+    font-weight: 600;
+    font-family: 'Helvetica', sans-serif;
+    color: #212529;
+}
+
+#nav-logo {
+    width: 100%;
+    height: 100%;
+    background-color: #f8f9fa;
+}
+
+#nav-list {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -28,11 +62,111 @@ body {
     height: 100%;
 }
 
-.nav-item{
+.nav-listItem {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
+    text-decoration: none;
+}
+
+.nav-listLink{
+    color: #212529;
+    text-decoration: none;
+}
+
+#nav-searchForm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+}
+
+
+#nav-searchInput{
+    padding: 10px 15px;
+    border: none;
+    border-radius: 20px 0px 0px 20px;
+    width: 300px;
+    height: 40px;
+    background-color: grey;
+    font-size: 1em;
+}
+
+#nav-searchButton {
+    height: 40px;
+    border-radius: 0px 20px 20px 0px;
+    width: 30px;
+    border: none;
+    cursor: pointer;
+    background-color: grey;
+}
+
+#nav-rightSideWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 20%;
+    height: 100%;
+}
+#nav-Logo{
+height: 60px;
+width: 60px;
+border-radius: 30px;
+background-color: black;
+}
+
+/* Dropdown container */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown button */
+.dropbtn {
+    background-color: #f8f9fa;
+    color: #212529;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'Helvetica', sans-serif;
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f8f9fa;
+    width: 100%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    font-family: 'Helvetica', sans-serif;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: #ddd;
 }
