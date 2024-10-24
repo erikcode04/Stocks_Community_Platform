@@ -1,0 +1,119 @@
+/* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Add this to your existing CSS file */
+
+
+/* Container for the boxes */
+.homePage-boxesContainer {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+/* Animation class to be added when in view */
+.homePage-boxesContainer.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Individual box styling */
+#homePage-stocksBox, #homePage-physicsBox, #homePage-spaceBox {
+    margin: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Box headers */
+.homePage-boxesHeaders {
+    font-size: 3em;
+    margin-bottom: 10px;
+}
+
+/* Image and text container */
+.homePage-stocksImgNTextContainer, .homePage-physicsImgNTextContainer, .homePage-spaceImgNTextContainer {
+    display: flex;
+    align-items: center;
+}
+
+/* Text side box */
+.homePage-textSideBox {
+    flex: 1;
+    padding: 10px;
+    align-items: space-between;
+}
+.homePage-textInsideBox {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+}
+
+.homePage-linkContainer{
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+#homePage-linktoStocks {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#homePage-linktoStocks:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+#homePage-linktoPhysics {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#homePage-linktoPhysics:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+#homePage-linktoSpace {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#homePage-linktoSpace:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+
+
+/* Photo half box */
+.homePage-photoHalfBox {
+    flex: 1;
+    padding: 10px;
+}
+
+/* Photo styling */
+.homePage-photo {
+    max-width: 100%;
+    border-radius: 10px;
+}

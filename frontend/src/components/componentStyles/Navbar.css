@@ -1,121 +1,93 @@
-/* Apply box-sizing to all elements */
+/* Basic reset */
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden; /* Prevent horizontal scrolling */
-}
-
+/* Navbar container */
 #nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
-    background-color: #f8f9fa;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    position: sticky;
-    width: 100%;
-    z-index: 100;
-    height: 70px;
+    background-color: #333;
+    padding: 10px 20px;
+    color: white;
+    position: relative;
 }
 
+/* Navbar logo container */
 #nav-logoContainer {
-    margin-left: 0;
-    width: 20%;
-    height: 100%;
+    display: flex;
+    align-items: center;
 }
 
+/* Navbar home link */
 #nav-homeLink {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 60%;
-    height: 100%;
-    background-color: #f8f9fa;
     text-decoration: none;
+    color: white;
 }
 
 #nav-homeLinkText {
-    font-size: 1.7em;
-    font-weight: 600;
+    font-size: 1.5em;
     font-family: 'Helvetica', sans-serif;
-    color: #212529;
 }
 
-#nav-logo {
-    width: 100%;
-    height: 100%;
-    background-color: #f8f9fa;
-}
-
+/* Navbar list */
 #nav-list {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     list-style: none;
-    padding: 0;
-    margin: 0;
-    width: 95%;
-    height: 100%;
-}
-
-.nav-listItem {
     display: flex;
-    justify-content: center;
     align-items: center;
+}
+
+/* Navbar list item */
+.nav-listItem {
+    margin-left: 20px;
+}
+
+/* Navbar list link */
+.nav-listLink {
+    text-decoration: none;
+    color: white;
+    font-family: 'Helvetica', sans-serif;
     padding: 10px 15px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover effect for navbar link */
+.nav-listLink:hover {
+    background-color: #555;
+    color: #fff;
     border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
 }
 
-.nav-listLink{
-    color: #212529;
-    text-decoration: none;
-}
-
+/* Navbar search form */
 #nav-searchForm {
     display: flex;
-    justify-content: center;
     align-items: center;
-    width: 30%;
+    margin-left: 20px;
 }
 
-
-#nav-searchInput{
-    padding: 10px 15px;
+#nav-searchInput {
+    padding: 5px;
     border: none;
-    border-radius: 20px 0px 0px 20px;
-    width: 300px;
-    height: 40px;
-    background-color: grey;
-    font-size: 1em;
+    border-radius: 3px;
 }
 
 #nav-searchButton {
-    height: 40px;
-    border-radius: 0px 20px 20px 0px;
-    width: 30px;
+    background-color: #555;
     border: none;
+    color: white;
+    padding: 5px 10px;
     cursor: pointer;
-    background-color: grey;
+    border-radius: 3px;
+    margin-left: 5px;
 }
 
+/* Navbar right side wrapper */
 #nav-rightSideWrapper {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    width: 20%;
-    height: 100%;
-}
-#nav-Logo{
-height: 60px;
-width: 60px;
-border-radius: 30px;
-background-color: black;
 }
 
 /* Dropdown container */
@@ -126,8 +98,8 @@ background-color: black;
 
 /* Dropdown button */
 .dropbtn {
-    background-color: #f8f9fa;
-    color: #212529;
+    background-color: #333;
+    color: white;
     padding: 10px 15px;
     border: none;
     cursor: pointer;
@@ -168,5 +140,48 @@ background-color: black;
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
-    background-color: #ddd;
+    background-color: #555;
+}
+
+/* Navbar toggle button (hidden by default) */
+#nav-hamburger {
+    display: none;
+    cursor: pointer;
+    font-size: 1.5em;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+    #nav-list {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        background-color: #333;
+    }
+
+    .nav-listItem {
+        margin: 10px 0;
+        text-align: center;
+    }
+
+    #nav-hamburger {
+        display: block;
+    }
+
+    #nav-list.active {
+        display: flex;
+    }
+
+    #nav-searchForm {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #nav-searchInput, #nav-searchButton {
+        width: 100%;
+        margin: 5px 0;
+    }
 }
