@@ -7,6 +7,29 @@
 
 /* Add this to your existing CSS file */
 
+.homePage-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .homePage-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Container for the buttons */
+  .homePage-buttonContainer {
+    margin-top: 20px;
+  }
 
 /* Container for the boxes */
 .homePage-boxesContainer {

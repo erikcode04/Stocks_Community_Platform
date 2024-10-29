@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import Logo from "../assets/logo.png";
 import { CiSearch } from "react-icons/ci";
-import { FaBars } from "react-icons/fa"; // Import hamburger icon
+import { FaBars } from "react-icons/fa"; 
 
 import "./componentStyles/navbar.css";
 
 function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
@@ -24,13 +22,13 @@ function Navbar() {
             </div>
             <ul id='nav-list' className={isMobileMenuOpen ? 'active' : ''}>
                 <li className='nav-listItem'>
-                    <a className='nav-listLink' href="/" >Home</a>
+                    <a className='nav-listLink' href="/" >About </a>
                 </li>
                 <li className='nav-listItem'>
-                    <a className='nav-listLink' href="/about" >About</a>
+                    <a className='nav-listLink' href="/about" >Contact </a>
                 </li>
                 <li className='nav-listItem'>
-                    <a className='nav-listLink' href="/contact" >Contact</a>
+                    <a className='nav-listLink' href="/contact" >Profile </a>
                 </li>
                 <form id='nav-searchForm'>
                     <input id='nav-searchInput' type="text" placeholder="Search.." name="search" />

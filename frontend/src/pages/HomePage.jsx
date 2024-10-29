@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import "../styles/homepage.css";
 import Navbar from "../components/Navbar";
 import coolDuck from "../assets/coolDuck.png";
@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 
 function HomePage() {
   const boxesContainerRef = useRef(null);
-
+  const [checkLoggedIn, setCheckLoggedIn] = useState(false); 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -39,7 +39,10 @@ function HomePage() {
       <div className='homePage-contentContainer'>
         <h1>Welcome to the Home Page</h1>
         <p>This is the home page of our React application.</p>
-
+        <div className='homePage-buttonContainer'>
+          <Link to='/login' className='homePage-button'>Login</Link>
+          <Link to='/signup' className='homePage-button'>Signup</Link>
+        </div>
         <div className='homePage-boxesContainer' ref={boxesContainerRef}>
           <div id='homePage-stocksPartBackround'>
             <div id='homePage-stocksBox'>
