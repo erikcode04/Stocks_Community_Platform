@@ -12,7 +12,7 @@ function LoginPage() {
     console.log('Email:', email);
     console.log('Password:', password);
 
-   const response = await axios.post('http://localhost:5000/test', { email, password });
+   const response = await axios.post('http://localhost:5000/auth/login', { email, password });
     
   };
 
