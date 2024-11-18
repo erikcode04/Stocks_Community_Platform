@@ -9,9 +9,10 @@ const client = new MongoClient(uri, {
     version: ServerApiVersion.v1,
     strict: true,
     deprecationErrors: true,
-  }
+  },
+  serverSelectionTimeoutMS: 30000, // Increase server selection timeout to 30 seconds
+  socketTimeoutMS: 60000, // Increase socket timeout to 60 seconds
 });
-
 const connectDB = async () => {
   try {
     // Connect the client to the server
@@ -19,6 +20,7 @@ const connectDB = async () => {
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    return client.db();
   } catch (err) {
     console.error(`Error: ${err.message}`);
     process.exit(1);

@@ -1,45 +1,59 @@
 const jwt = require('jsonwebtoken');
+const { connectDB, client } = require('../config/db'); // Adjust the path as necessary
 const bcrypt = require('bcrypt');
 const User = require('../models/User'); // Assuming you have a User model
+const { json } = require('body-parser');
 require('dotenv').config({ path: './.env.local' }); // Load environment variables from .env.local in the same directory
-
 
 const secretKey = process.env.JWT_SECRET; // Use environment variables for sensitive data
 console.log(secretKey, "secretKey");
-// Login function
-console.log("signup erik");
+
+
+
 async function login(email, password) {
-  const user = await User.findOne({ email });
+  console.log('Login function inside authService');
+  await connectDB(); 
+  const db = client.db();
+  const users = db.collection('users');
+  console.log(users, "users");
+  const user = await users.findOne({ email });
+ console.log("Found the user and that is very good");
   if (!user) {
+    console.log('User not found inside authService');
     throw new Error('User not found');
   }
-console.log("login function inside authService");
-  const isPasswordValid = await bcrypt.compare(password, user.password);
+  const isPasswordValid = await bcrypt.compare(password, user.hashedPassword);
   console.log(isPasswordValid, "isPasswordValid");
   if (!isPasswordValid) {
     console.log('Invalid password inside authService');
     throw new Error('Invalid password');
   }
-
+console.log("Token is being generated");
   const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '1h' });
+  console.log("Token is generated", token);
   return token;
 }
 
+
+
 // Signup function
-async function signup(email, userName ,password) {
+async function signup(email, userName, password) {
   console.log('Signup function inside authService');
+  const db = await connectDB(); // Ensure the database is connected
+  if (!db) {
+    throw new Error('Failed to connect to the database');
+  }
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword, "hashedPassword");
-    const user = new User({ email, userName , password: hashedPassword });
-    console.log(user, "user");
-    await user.save();
-    console.log("last line of signup function");
-    return user;
+       const hashedPassword = await bcrypt.hash(password, 10);
+    const result = await db.collection('users').insertOne({ email, userName, hashedPassword });
+    console.log('User inserted:', result);
+    return result;
   } catch (error) {
-    console.error('Error saving user:', error);
+    console.error('Error inserting user:', error);
     throw error;
   }
+  
+
 }
 
 module.exports = {
