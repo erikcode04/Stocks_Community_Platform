@@ -1,4 +1,7 @@
 const authService = require('../services/authService');
+require('dotenv').config({ path: './.env.local' }); // Load environment variables from .env.local in the same directory
+
+
 
 // Login function
 exports.login = async (req, res) => {
@@ -6,7 +9,11 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
     const token = await authService.login(email, password);
     console.log("login controller return from login", token);
-    res.json({ token });
+    res.cookie('token', token, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 1 * 60 * 60 * 1000 // 1 hour
+    });    res.status(200).json( { message: "Login successful" });
   } catch (error) {
     res.status(401).json({ message: error.message });
   }

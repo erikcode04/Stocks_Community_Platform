@@ -4,11 +4,15 @@ import Navbar from "../components/Navbar";
 import coolDuck from "../assets/coolDuck.png";
 import magnet from "../assets/magnet.png";
 import ailen from "../assets/weirdAilen.png";
+import newsPaper from "../assets/newspaper.png";
+import topImage from "../assets/business.png";
 import { Link } from 'react-router-dom';
+import checkAuth from '../agils/checkAuth';
 
 function HomePage() {
   const boxesContainerRef = useRef(null);
   const [checkLoggedIn, setCheckLoggedIn] = useState(false); 
+ // let checkLoggedIn = false;
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -33,15 +37,27 @@ function HomePage() {
     };
   }, []);
 
+
+  useEffect(() => {
+checkAuth() ? setCheckLoggedIn(true) : setCheckLoggedIn(false);
+  });
+
   return (
     <div>
       <Navbar/>
       <div className='homePage-contentContainer'>
-        <h1>Welcome to the Home Page</h1>
-        <p>This is the home page of our React application.</p>
+        <div id='homePage-topContainer'>
+          <div id='homePage-topImageContainer'> 
+          <img id='homePage-topImage' src={topImage} alt="Business" />
+          </div>
+        <h1 id='homePage-header'>Welcome to the Home Page</h1>
+        <p id='homePage-welcomingText'>This is the home page of our React application.</p>
+        {!checkLoggedIn && (
         <div className='homePage-buttonContainer'>
           <Link to='/login' className='homePage-button'>Login</Link>
           <Link to='/signup' className='homePage-button'>Signup</Link>
+        </div>
+        )}
         </div>
         <div className='homePage-boxesContainer' ref={boxesContainerRef}>
           <div id='homePage-stocksPartBackround'>
@@ -78,7 +94,7 @@ function HomePage() {
 
           <div id='homePage-spacePartBackround'>
             <div id='homePage-spaceBox'>
-              <h2 className='homePage-boxesHeaders'>Space</h2>
+              <h2 className='homePage-boxesHeaders'>News</h2>
               <div className='homePage-spaceImgNTextContainer'>
                 <div className='homePage-textSideBox'>
                   <p className='homePage-textInsideBox'>
@@ -89,7 +105,7 @@ function HomePage() {
                   </div>
                 </div>
                 <div className='homePage-photoHalfBox'>
-                  <img className='homePage-photo' src={ailen} alt="Weird Alien" />
+                  <img className='homePage-photo' src={newsPaper} alt="Weird Alien" />
                 </div>
               </div>
             </div>

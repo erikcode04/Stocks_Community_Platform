@@ -1,11 +1,15 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import Cookies from 'js-cookie';
+import { useNavigate } from "react-router-dom";
+import  getCookie  from '../agils/getCookie';
 import "../styles/login.css";
+
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [failedLogin, setFailedLogin] = useState(false);
+  const naviate = useNavigate();
 
   const handleSubmit = async (e) =>  {
     e.preventDefault();
@@ -13,13 +17,21 @@ function LoginPage() {
     console.log('Email:', email);
     console.log('Password:', password);
 try {
-   const response = await axios.post('http://localhost:5000/auth/login', { email, password });
-    console.log('Login response:', response.data.token);
-    const token = response.data.token;
-    Cookies.set('token', token, { expires: 7 }); // Store the token as a cookie for 7 days
-    console.log('Token saved to cookies');
+   const response = await axios.post('http://localhost:5000/auth/login', { email, password }, { withCredentials: true });
+    if (!response.status === 200) {
+      console.error('No token received');
+      setFailedLogin(true);
+      return;
+    }
+
+   const cb =  getCookie('token');
+   console.log('cb:', cb);
+ 
+    
+    naviate('/');
   } catch (error) {
     console.error('Login error:', error);
+    setFailedLogin(true);
   }
   };
 
@@ -47,8 +59,10 @@ try {
             required
           />
         </div>
+        {failedLogin && <div className="login-failBox"><p id='login-failText'>Invalid email or password</p></div>}
         <button type="submit" className="login-button">Login</button>
       </form>
+      
     </div>
   );
 }

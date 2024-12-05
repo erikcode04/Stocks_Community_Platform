@@ -3,12 +3,18 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const { connectDB, client } = require('./config/db'); // Adjust the path if necessary
+const cookieParser = require('cookie-parser');
+
 
 const app = express();
 
 // Middleware
+app.use(cookieParser());
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // Replace with your frontend URL
+  credentials: true
+}));
 
 app.use('/auth', authRoutes);
 // Connect to MongoDB

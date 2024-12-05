@@ -3,6 +3,7 @@ const { connectDB, client } = require('../config/db'); // Adjust the path as nec
 const bcrypt = require('bcrypt');
 const User = require('../models/User'); // Assuming you have a User model
 const { json } = require('body-parser');
+const cookieParser = require('cookie-parser');
 require('dotenv').config({ path: './.env.local' }); // Load environment variables from .env.local in the same directory
 
 const secretKey = process.env.JWT_SECRET; // Use environment variables for sensitive data
@@ -29,10 +30,11 @@ async function login(email, password) {
     throw new Error('Invalid password');
   }
 console.log("Token is being generated");
-  const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: '1h' });
+  const token = jwt.sign({ userId: user._id, email }, secretKey, { expiresIn: '1h' });
   console.log("Token is generated", token);
   return token;
 }
+
 
 
 
