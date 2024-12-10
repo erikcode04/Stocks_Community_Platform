@@ -40,7 +40,7 @@ function Navbar() {
                         <div className='dropdown-content'>
                             <a href="/stocks">Stocks</a>
                             <a href="/physics">Physics</a>
-                            <a href="/space">Space</a>
+                            <a href="/space">Log Out</a>
                         </div>
                     </li>
                     <div id='nav-Logo'>

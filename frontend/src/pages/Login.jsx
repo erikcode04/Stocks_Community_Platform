@@ -19,16 +19,13 @@ function LoginPage() {
 try {
    const response = await axios.post('http://localhost:5000/auth/login', { email, password }, { withCredentials: true });
     if (!response.status === 200) {
-      console.error('No token received');
+      console.error('Login failed:', response);
       setFailedLogin(true);
       return;
     }
-
-   const cb =  getCookie('token');
-   console.log('cb:', cb);
+    console.log('Response before error:', response);
+      naviate('/');
  
-    
-    naviate('/');
   } catch (error) {
     console.error('Login error:', error);
     setFailedLogin(true);

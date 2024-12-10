@@ -39,8 +39,30 @@ function HomePage() {
 
 
   useEffect(() => {
-checkAuth() ? setCheckLoggedIn(true) : setCheckLoggedIn(false);
-  });
+    async function fetchProtectedResource() {
+      try {
+          const response = await fetch('http://localhost:5000/auth/verifyToken', {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              credentials: 'include' // Include cookies in the request
+          });
+  
+          if (response.ok) {
+              const data = await response.json();
+              console.log('Protected resource data:', data);
+          } else {
+              console.log('Failed to fetch protected resource');
+          }
+      } catch (error) {
+          console.error('Error:', error);
+      }
+  }
+
+  fetchProtectedResource();
+
+  }, []);
 
   return (
     <div>

@@ -2,8 +2,6 @@ const jwt = require('jsonwebtoken');
 const { connectDB, client } = require('../config/db'); // Adjust the path as necessary
 const bcrypt = require('bcrypt');
 const User = require('../models/User'); // Assuming you have a User model
-const { json } = require('body-parser');
-const cookieParser = require('cookie-parser');
 require('dotenv').config({ path: './.env.local' }); // Load environment variables from .env.local in the same directory
 
 const secretKey = process.env.JWT_SECRET; // Use environment variables for sensitive data
@@ -55,10 +53,40 @@ async function signup(email, userName, password) {
     throw error;
   }
   
-
 }
+
+async function verifyToken(req, res, next) {
+  try {
+    console.log("verifyToken function inside authService");
+console.log("req", req);
+    const token = req.cookies.token || req.headers.authorization;
+    console.log("yesssssssss");
+    console.log(token, "token in verifyToken");
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const decoded = jwt.verify(token, secretKey);
+
+    await connectDB(); 
+    const db = client.db();
+    const users = db.collection('users');
+    console.log(users, "users");
+    const user = await users.findOne( decoded.userId );
+    if (!user) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    req.user = user; // Attach user to request object
+    next();
+  } catch (error) {
+    res.status(401).json({ message: "Unauthorized" });
+  }
+}
+
 
 module.exports = {
   login,
   signup,
+  verifyToken,
 };
