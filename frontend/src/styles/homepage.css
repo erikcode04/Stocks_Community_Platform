@@ -37,6 +37,14 @@
     border-radius: 10px;
 }
 
+.homePage-basicBox{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+}
+
 #homePage-header {
     font-size: 3em;
     margin-bottom: 20px;

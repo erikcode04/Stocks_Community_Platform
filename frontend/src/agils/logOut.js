@@ -1,5 +1,21 @@
-function logOut() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.reload();
-}
+export const handleLogout = async () => {
+    try {
+
+
+        const response = await fetch('http://localhost:5000/auth/logout', {
+            method: 'POST',
+            credentials: 'include' // Include cookies in the request
+        });
+
+        if (response.ok) {
+            console.log('Logged out successfully');
+            return response;
+        } else {
+            console.error('Failed to log out');
+            return response;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        return error;
+    }
+};

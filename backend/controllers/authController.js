@@ -18,6 +18,19 @@ exports.login = async (req, res) => {
   }
 };
 
+
+exports.logout = async (req, res) => {
+  try {
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+  });
+  res.status(200).json({ success: true, message: 'Logged out successfully' });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
 // Signup function
 exports.signup = async (req, res) => {
   try {
@@ -34,15 +47,18 @@ exports.signup = async (req, res) => {
 
 exports.verifyToken = async (req, res) => {
 
-  const token = req.cookies.token; // Access the token from the cookies
-  console.log("lmao", token); // Log the token
+  const token = req.cookies.token; 
 
   if (token) {
       try {
         console.log("fwewfwef");
-          const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify the token
+          const decoded = jwt.verify(token, process.env.JWT_SECRET); 
           console.log("decoded", decoded);
-          res.status(200).json({ success: true, userId: decoded.userId });
+          const sendBack = { userId: decoded.userId,
+           email: decoded.email,
+           userName: decoded.userName,
+           };
+          res.status(200).json({ success: true, userInfo: sendBack });
       } catch (err) {
           res.status(401).json({ success: false, message: 'Invalid token' });
       }

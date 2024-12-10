@@ -1,14 +1,29 @@
 import React, { useState } from 'react';
 import { CiSearch } from "react-icons/ci";
 import { FaBars } from "react-icons/fa"; 
+import { useNavigate } from 'react-router-dom';
 
 import "./componentStyles/navbar.css";
-
+import {handleLogout} from "../agils/logOut";
 function Navbar() {
+    const navigate = useNavigate();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
+
+
+    async function calllogOut() {
+        const response = await handleLogout();
+        if (response.ok) {
+            console.log('Logged out successfully');
+            navigate('/login');
+       
+        } else {
+            console.error('Failed to log out');
+            return response;
+        }
+    }
 
     return (
         <nav id='nav-container'>
@@ -40,7 +55,7 @@ function Navbar() {
                         <div className='dropdown-content'>
                             <a href="/stocks">Stocks</a>
                             <a href="/physics">Physics</a>
-                            <a href="/space">Log Out</a>
+                            <button onClick={calllogOut}>Log Out</button>
                         </div>
                     </li>
                     <div id='nav-Logo'>

@@ -1,29 +1,41 @@
-function checkAuth() {
-    const token = localStorage;
-    console.log('Token:', token);
- 
-    if (token !== null) {
+import React, { createContext, useState, useEffect } from 'react';
 
-       try {
-          const parsedToken = JSON.parse(atob(token.split('.')[1])); // Assuming it's a JWT token
-          console.log('Parsed Token:', parsedToken);
- 
-          // Check for a specific value in the token
-          if (parsedToken && parsedToken.userId) {
-             console.log('User is authenticated');
-             return true;
-          } else {
-             console.log('Token validation failed');
-             return false;
-          }
-       } catch (error) {
-          console.log('Token parsing failed:', error);
-          return false;
-       }
-    } else {
-       console.log('User is not authenticated');
-       return false;
-    }
- }
- 
- export default checkAuth;
+export const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userInfo, setUserInfo] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/auth/verifyToken', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                if (response.ok) {
+                  const data = await response.json();
+                  console.log('User info:', data);
+                    setIsLoggedIn(true);
+                    setUserInfo(data.userInfo);
+                } else {
+                    setIsLoggedIn(false);
+                }
+            } catch (error) {
+                console.error('Error checking auth:', error);
+                setIsLoggedIn(false);
+            }
+            finally {
+               setIsLoading(false);
+           }
+        };
+
+        checkAuth();
+    }, []);
+
+    return (
+        <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, userInfo, setUserInfo, isLoading }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};

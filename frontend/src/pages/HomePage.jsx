@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import "../styles/homepage.css";
 import Navbar from "../components/Navbar";
 import coolDuck from "../assets/coolDuck.png";
@@ -7,11 +7,12 @@ import ailen from "../assets/weirdAilen.png";
 import newsPaper from "../assets/newspaper.png";
 import topImage from "../assets/business.png";
 import { Link } from 'react-router-dom';
-import checkAuth from '../agils/checkAuth';
+import { AuthContext } from '../agils/checkAuth';
 
 function HomePage() {
+  const { isLoggedIn, userInfo } = useContext(AuthContext);
+
   const boxesContainerRef = useRef(null);
-  const [checkLoggedIn, setCheckLoggedIn] = useState(false); 
  // let checkLoggedIn = false;
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -38,32 +39,6 @@ function HomePage() {
   }, []);
 
 
-  useEffect(() => {
-    async function fetchProtectedResource() {
-      try {
-          const response = await fetch('http://localhost:5000/auth/verifyToken', {
-              method: 'GET',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              credentials: 'include' // Include cookies in the request
-          });
-  
-          if (response.ok) {
-              const data = await response.json();
-              console.log('Protected resource data:', data);
-          } else {
-              console.log('Failed to fetch protected resource');
-          }
-      } catch (error) {
-          console.error('Error:', error);
-      }
-  }
-
-  fetchProtectedResource();
-
-  }, []);
-
   return (
     <div>
       <Navbar/>
@@ -72,12 +47,20 @@ function HomePage() {
           <div id='homePage-topImageContainer'> 
           <img id='homePage-topImage' src={topImage} alt="Business" />
           </div>
+          {!isLoggedIn && (
+            <div className='homePage-basicBox'>
         <h1 id='homePage-header'>Welcome to the Home Page</h1>
         <p id='homePage-welcomingText'>This is the home page of our React application.</p>
-        {!checkLoggedIn && (
         <div className='homePage-buttonContainer'>
           <Link to='/login' className='homePage-button'>Login</Link>
           <Link to='/signup' className='homePage-button'>Signup</Link>
+        </div>
+        </div>
+        )}
+            {isLoggedIn && (
+            <div className='homePage-basicBox'>
+        <h1 id='homePage-header'>Hello {userInfo.userName} </h1>
+        <p id='homePage-welcomingText'>There is always facts about stocks to share or read about</p>
         </div>
         )}
         </div>

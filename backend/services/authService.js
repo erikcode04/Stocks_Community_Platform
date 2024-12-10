@@ -28,10 +28,16 @@ async function login(email, password) {
     throw new Error('Invalid password');
   }
 console.log("Token is being generated");
-  const token = jwt.sign({ userId: user._id, email }, secretKey, { expiresIn: '1h' });
+  const token = jwt.sign({ userId: user._id, email, userName: user.userName }, secretKey, { expiresIn: '1h' });
   console.log("Token is generated", token);
   return token;
 }
+
+async function logout() {
+  // Clear the cookie containing the token
+  return { message: 'Logout successful' };
+}
+
 
 
 
@@ -89,4 +95,5 @@ module.exports = {
   login,
   signup,
   verifyToken,
+  logout,
 };
