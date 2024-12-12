@@ -1,14 +1,16 @@
 import axios from 'axios';
-import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, { useState, useContext } from 'react';
+import { useNavigate, Link } from "react-router-dom";
+import { AuthContext } from '../agils/checkAuth';
 import "../styles/login.css";
 
 
 function LoginPage() {
+  const { setIsLoggedIn } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [failedLogin, setFailedLogin] = useState(false);
-  const naviate = useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) =>  {
     e.preventDefault();
@@ -22,8 +24,11 @@ try {
       setFailedLogin(true);
       return;
     }
+    
     console.log('Response before error:', response);
-      naviate('/');
+  setIsLoggedIn(true);
+      navigate('/');
+    
  
   } catch (error) {
     console.error('Login error:', error);
@@ -57,6 +62,11 @@ try {
         </div>
         {failedLogin && <div className="login-failBox"><p id='login-failText'>Invalid email or password</p></div>}
         <button type="submit" className="login-button">Login</button>
+         <hr></hr>
+         <div id='login-signupContainer'> 
+          <p> Dont have an account? </p>
+        <Link to='/signup' className='login-Link'>Signup</Link>
+        </div>
       </form>
       
     </div>

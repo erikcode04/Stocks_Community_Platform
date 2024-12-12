@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { CiSearch } from "react-icons/ci";
 import { FaBars } from "react-icons/fa"; 
-import { useNavigate } from 'react-router-dom';
 
 import "./componentStyles/navbar.css";
 import {handleLogout} from "../agils/logOut";
 function Navbar() {
-    const navigate = useNavigate();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -17,8 +15,6 @@ function Navbar() {
         const response = await handleLogout();
         if (response.ok) {
             console.log('Logged out successfully');
-            navigate('/login');
-       
         } else {
             console.error('Failed to log out');
             return response;
@@ -43,7 +39,7 @@ function Navbar() {
                     <a className='nav-listLink' href="/about" >Contact </a>
                 </li>
                 <li className='nav-listItem'>
-                    <a className='nav-listLink' href="/contact" >Profile </a>
+                    <a className='nav-listLink' href="/profilePage" >Profile </a>
                 </li>
                 <form id='nav-searchForm'>
                     <input id='nav-searchInput' type="text" placeholder="Search.." name="search" />
@@ -54,8 +50,8 @@ function Navbar() {
                         <a href="#" className='dropbtn'>Categories</a>
                         <div className='dropdown-content'>
                             <a href="/stocks">Stocks</a>
-                            <a href="/physics">Physics</a>
-                            <button onClick={calllogOut}>Log Out</button>
+                            <a href="/post">Post</a>
+                            <button id='nav-LogOutButton' onClick={calllogOut}>Log Out</button>
                         </div>
                     </li>
                     <div id='nav-Logo'>

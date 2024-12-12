@@ -9,6 +9,9 @@ export const handleLogout = async () => {
 
         if (response.ok) {
             console.log('Logged out successfully');
+            sessionStorage.clear();
+            localStorage.clear();
+            window.location.reload();
             return response;
         } else {
             console.error('Failed to log out');

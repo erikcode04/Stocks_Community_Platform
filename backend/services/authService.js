@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { connectDB, client } = require('../config/db'); // Adjust the path as necessary
 const bcrypt = require('bcrypt');
-const User = require('../models/User'); // Assuming you have a User model
 require('dotenv').config({ path: './.env.local' }); // Load environment variables from .env.local in the same directory
 
 const secretKey = process.env.JWT_SECRET; // Use environment variables for sensitive data

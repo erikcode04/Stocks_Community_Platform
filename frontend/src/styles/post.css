@@ -1,0 +1,83 @@
+.post-contentContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+
+#post-postBox{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    width: 50rem;
+    height: 40rem;
+}
+
+
+.post-titleAreaContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;;
+    height: 10rem;
+    margin: 10px;
+}
+
+
+.post-formForPost{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content:flex-start;
+    width: 100%;
+    height: 10rem;
+}
+
+.post-textAreaContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content:flex-end;
+    width: 100%;
+    height: 10rem;
+    flex: 1;
+}
+
+
+#post-textArea{
+    resize: none;
+    width: 100%;
+    height: 8rem;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 40px;
+
+}
+
+.post-submitButton {
+    width: 150px;
+    height: 50px; /* Fixed height */
+    line-height: 100px; /* Match line-height to height for vertical centering */
+    border-radius: 10px;
+    background-color: #30343F;
+    color: white;
+    font-size: 16px; /* Adjust font size as needed */
+    font-weight: bold;
+    font-family: 'Helvetica', sans-serif;
+    border: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}

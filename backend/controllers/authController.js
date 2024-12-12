@@ -1,6 +1,5 @@
 require('dotenv').config({ path: './.env.local' }); // Load environment variables from .env.local in the same directory
 const authService = require('../services/authService');
-const getProtectedDataForUser = require('../services/protectedRecources');
 const jwt = require('jsonwebtoken');
 // Login function
 exports.login = async (req, res) => {

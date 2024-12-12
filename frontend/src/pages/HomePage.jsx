@@ -1,19 +1,17 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import "../styles/homepage.css";
 import Navbar from "../components/Navbar";
 import coolDuck from "../assets/coolDuck.png";
 import magnet from "../assets/magnet.png";
-import ailen from "../assets/weirdAilen.png";
 import newsPaper from "../assets/newspaper.png";
 import topImage from "../assets/business.png";
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../agils/checkAuth';
 
 function HomePage() {
-  const { isLoggedIn, userInfo } = useContext(AuthContext);
 
+  const { userInfo } = useContext(AuthContext);
   const boxesContainerRef = useRef(null);
- // let checkLoggedIn = false;
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -25,6 +23,7 @@ function HomePage() {
       },
       { threshold: 0.1 }
     );
+
 
     const boxesContainer = boxesContainerRef.current;
     if (boxesContainer) {
@@ -46,23 +45,12 @@ function HomePage() {
         <div id='homePage-topContainer'>
           <div id='homePage-topImageContainer'> 
           <img id='homePage-topImage' src={topImage} alt="Business" />
-          </div>
-          {!isLoggedIn && (
+          </div>  
             <div className='homePage-basicBox'>
-        <h1 id='homePage-header'>Welcome to the Home Page</h1>
-        <p id='homePage-welcomingText'>This is the home page of our React application.</p>
-        <div className='homePage-buttonContainer'>
-          <Link to='/login' className='homePage-button'>Login</Link>
-          <Link to='/signup' className='homePage-button'>Signup</Link>
-        </div>
-        </div>
-        )}
-            {isLoggedIn && (
-            <div className='homePage-basicBox'>
-        <h1 id='homePage-header'>Hello {userInfo.userName} </h1>
+       {userInfo && <h1 id='homePage-header'>Hello {userInfo.userName} </h1>}
         <p id='homePage-welcomingText'>There is always facts about stocks to share or read about</p>
         </div>
-        )}
+    
         </div>
         <div className='homePage-boxesContainer' ref={boxesContainerRef}>
           <div id='homePage-stocksPartBackround'>

@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
+const postsRoutes = require('./routes/postsRoutes');
 const { connectDB, client } = require('./config/db'); // Adjust the path if necessary
 const cookieParser = require('cookie-parser');
 
@@ -17,6 +18,7 @@ app.use(cors({
 }));
 
 app.use('/auth', authRoutes);
+app.use('/posts', postsRoutes);
 // Connect to MongoDB
 connectDB();
 

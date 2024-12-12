@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
 import "../styles/login.css";
 
 function SignupPage() {
@@ -22,7 +23,7 @@ function SignupPage() {
   return (
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit}>
-        <h2>Login</h2>
+        <h2>Signup</h2>
         <div className="form-group">
           <label htmlFor="email">Email:</label>
           <input
@@ -53,7 +54,11 @@ function SignupPage() {
             required
           />
         </div>
-        <button type="submit" className="login-button">Login</button>
+        <button type="submit" className="login-button">Signup</button>
+        <div id='login-signupContainer'> 
+          <p> Already have an account? </p>
+        <Link to='/login' className='login-Link'>Login</Link>
+        </div>
       </form>
     </div>
   );
