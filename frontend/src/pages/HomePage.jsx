@@ -61,7 +61,7 @@ function HomePage() {
                   <p className='homePage-textInsideBox'>
                     Welcome to the Stocks Page! Here you can explore and search for up-to-date stock information, track your favorite companies, and stay informed on market trends. Whether you're an investor or just curious about the stock market, our intuitive tools make it easy to find the data you need. Start your search and stay ahead of the market!
                   </p>
-                  <Link to='/stocks' id='homePage-linktoStocks'>Explore Stocks</Link>
+                  <Link to='/feed' id='homePage-linktoStocks'>Explore Stocks</Link>
                 </div>
                 <div className='homePage-photoHalfBox'>
                   <img className='homePage-photo' src={coolDuck} alt="Cool Duck" />

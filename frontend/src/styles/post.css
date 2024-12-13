@@ -1,12 +1,12 @@
-.post-contentContainer{
+.post-contentContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
+    padding: 0 20px; /* Add padding for smaller screens */
 }
 
-
-#post-postBox{
+#post-postBox {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -16,68 +16,92 @@
     border-radius: 10px;
     background-color: white;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
-    width: 50rem;
-    height: 40rem;
+    width: 100%;
+    max-width: 50rem; /* Set a max-width */
+    height: auto; /* Allow height to adjust based on content */
 }
 
-
-.post-titleAreaContainer{
+.post-titleAreaContainer,
+.post-textAreaContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    width: 100%;;
-    height: 10rem;
-    margin: 10px;
+    width: 100%;
+    margin: 10px 0;
 }
 
-
-.post-formForPost{
+.post-formForPost {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content:flex-start;
+    justify-content: flex-start;
     width: 100%;
-    height: 10rem;
 }
 
-.post-textAreaContainer{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content:flex-end;
-    width: 100%;
-    height: 10rem;
-    flex: 1;
-}
-
-
-#post-textArea{
+#post-textArea {
     resize: none;
     width: 100%;
     height: 8rem;
     border-radius: 10px;
     padding: 10px;
-    margin-bottom: 40px;
-
+    margin-bottom: 20px;
 }
 
 .post-submitButton {
     width: 150px;
-    height: 50px; /* Fixed height */
-    line-height: 100px; /* Match line-height to height for vertical centering */
+    height: 50px;
     border-radius: 10px;
     background-color: #30343F;
     color: white;
-    font-size: 16px; /* Adjust font size as needed */
+    font-size: 16px;
     font-weight: bold;
     font-family: 'Helvetica', sans-serif;
     border: none;
     margin-top: 10px;
     margin-bottom: 10px;
-display: flex;
+    display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    #post-postBox {
+        padding: 15px;
+        width: 100%;
+    }
+
+    .post-titleAreaContainer,
+    .post-textAreaContainer {
+        margin: 5px 0;
+    }
+
+    #post-textArea {
+        height: 6rem;
+    }
+
+    .post-submitButton {
+        width: 100px;
+        height: 40px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .post-contentContainer {
+        margin-top: 10px;
+    }
+
+    #post-postBox {
+        padding: 10px;
+    }
+
+    .post-submitButton {
+        width: 80px;
+        height: 35px;
+        font-size: 12px;
+    }
 }

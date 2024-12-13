@@ -7,6 +7,7 @@ import LoginPage from './pages/Login';
 import SignupPage from './pages/Signup';
 import ProfilePage from './pages/ProfilePage';
 import Post from './pages/Post';
+import FeedPage from './pages/FeedPage';
 function App() {
 
 const { isLoggedIn, isLoading } = useContext(AuthContext);
@@ -26,6 +27,7 @@ if (!isLoggedIn) {
       <Route path="/" element={isLoggedIn ? <HomePage /> : <LoginPage/>} />
         <Route path="profilePage" element={isLoggedIn ? <ProfilePage/> : <LoginPage/>} />
         <Route path="post" element={isLoggedIn ? <Post/> : <LoginPage/>} />
+        <Route path="feed" element={isLoggedIn ? <FeedPage/> : <LoginPage/>} />
       </Routes>
     </Router>
   );
