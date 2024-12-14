@@ -3,7 +3,7 @@ const { ObjectId } = require('mongodb');
 
 async function post( userId ,title, textAreaContent) {
     console.log('post function inside postsService');
-      await connectDB(); // Ensure the database is connected
+      await connectDB(); 
     const db = client.db();
     if (!db) {
         throw new Error('Failed to connect to the database');
@@ -20,28 +20,27 @@ async function post( userId ,title, textAreaContent) {
 }
 
 async function getPosts() {
-    await connectDB(); // Ensure the database is connected
+    await connectDB();
     const db = client.db();
     if (!db) {
         throw new Error('Failed to connect to the database');
     }
     try {
-        const posts = await db.collection('posts').find().toArray();
-        const userIds = posts.map(post => post.userId);
+       const prepPosts = await db.collection('posts').find().toArray();
+       const userIds = prepPosts.map(post => post.userId);
        const objectIdArray = userIds.map(id => new ObjectId(id));
-        console.log('Object ID array:', objectIdArray);
        const users = await db.collection('users').find({ _id: { $in: objectIdArray } }).toArray(); 
-     for (let i = 0; i < users.length; i++) {
-        const element = users[i];
-      
-        console.log('Element:', element);
-     }
-     for (let post of posts) {
-            const user = users.find(user => user._id.toString() === post.userId);
-            console.log('User:', user);
+       const sanitizedUsers = users.map(user => {
+        const { hashedPassword, ...sanitizedUser } = user;
+        return sanitizedUser;
+    });
+        let posts = [];
+     for (let post of prepPosts) {
+            const user = sanitizedUsers.find(user => user._id.toString() === post.userId);
             post.user = user;
-            console.log('Post:', post);
+            posts.push(post);
         }
+        console.log('Posts:', posts);
         return posts;
     } catch (error) {
         console.error('Error finding posts:', error);

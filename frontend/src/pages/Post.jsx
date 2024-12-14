@@ -6,6 +6,8 @@ import "../styles/post.css";
 
 function Post() {
     const { userInfo } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+  const [stateOfUpload, setStateOfUpload] = useState(false);
   const [post , setPost] = useState({
     title: "",
     textAreaContent: "",
@@ -20,11 +22,20 @@ function Post() {
             });
             console.log(post);
         }
+
+        const displaySuccess = () => {
+            setStateOfUpload(true);
+            setTimeout(() => {
+                setStateOfUpload(false);
+            }, 3000);
+        }
+
     
 
     const submitPost = async (e) => {
         console.log("submitPost with values", post);
         try {
+            setLoading(true);
         const postBox = {
             userId : userInfo.userId,
             title: post.title,
@@ -41,6 +52,12 @@ function Post() {
         })
         .then((response) => {
             console.log("response", response);
+            displaySuccess();
+            setPost({
+                title: "",
+                textAreaContent: "",
+            });
+            setLoading(false);
         })
          .catch((error) => {
             console.error("error", error);
@@ -72,7 +89,10 @@ function Post() {
                     <label htmlFor="content">Content:</label>
                     <textarea value={post.textAreaContent} onChange={handlePost} name="textAreaContent" id="post-textArea" required />
                 </div>
-                <button className="post-submitButton" type="submit">Upload</button>
+                {loading && <p>Loading...</p>}
+                <button className="post-submitButton" type="submit"> 
+                {stateOfUpload ? <p>uploaded </p> : <p>upload</p> } 
+                </button>
             </form>
         </div>
         </div>

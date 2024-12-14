@@ -5,3 +5,62 @@
     justify-content: center;
     margin-top: 20px;
 }
+
+
+#feed-contentContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.feed-postContainer {
+    width: 100%;
+    max-width: 600px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.feed-postContainer:hover {
+    transform: scale(1.02);
+}
+
+.feed-postTitle {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.feed-postTextContent {
+    font-size: 1em;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.feed-postAuthor, .feed-postCreatedDate {
+    font-size: 0.9em;
+    color: #777;
+}
+
+@media (max-width: 768px) {
+    .feed-postContainer {
+        padding: 15px;
+    }
+
+    .feed-postTitle {
+        font-size: 1.2em;
+    }
+
+    .feed-postTextContent {
+        font-size: 0.9em;
+    }
+
+    .feed-postAuthor, .feed-postCreatedDate {
+        font-size: 0.8em;
+    }
+}
