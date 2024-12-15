@@ -9,6 +9,7 @@ function Post() {
   const [loading, setLoading] = useState(false);
   const [stateOfUpload, setStateOfUpload] = useState(false);
   const [post , setPost] = useState({
+    subject: "",
     title: "",
     textAreaContent: "",
     });
@@ -38,6 +39,7 @@ function Post() {
             setLoading(true);
         const postBox = {
             userId : userInfo.userId,
+            subject: post.subject,
             title: post.title,
             textAreaContent: post.textAreaContent,
         }
@@ -54,6 +56,7 @@ function Post() {
             console.log("response", response);
             displaySuccess();
             setPost({
+                subject: "",
                 title: "",
                 textAreaContent: "",
             });
@@ -82,11 +85,13 @@ function Post() {
             <h2>Post</h2>
             <form className="post-formForPost" onSubmit={submitPost}>
                 <div className="post-titleAreaContainer">
-                    <label htmlFor="title">Title:</label>
-                    <input value={post.title} onChange={handlePost} type="text" name="title" id="title" required />
+                    <label htmlFor="subject" className="post-subjectLabel">Subject:</label>
+                    <input value={post.subject} onChange={handlePost} type="text" name="subject" className="post-subjectInput" required />
+                    <label htmlFor="title" className="post-titleLabel" >Title:</label>
+                    <input value={post.title} onChange={handlePost} type="text" name="title" className="post-titleInput"required />
                 </div>
                 <div className="post-textAreaContainer">
-                    <label htmlFor="content">Content:</label>
+                    <label htmlFor="content" className="post-postLabel" >Content:</label>
                     <textarea value={post.textAreaContent} onChange={handlePost} name="textAreaContent" id="post-textArea" required />
                 </div>
                 {loading && <p>Loading...</p>}

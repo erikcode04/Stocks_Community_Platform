@@ -1,7 +1,7 @@
 const { connectDB, client } = require('../config/db'); // Adjust the path if necessary
 const { ObjectId } = require('mongodb');
 
-async function post( userId ,title, textAreaContent) {
+async function post( subject, userId ,title, textAreaContent) {
     console.log('post function inside postsService');
       await connectDB(); 
     const db = client.db();
@@ -9,7 +9,8 @@ async function post( userId ,title, textAreaContent) {
         throw new Error('Failed to connect to the database');
     }
     try {
-        const result = await db.collection('posts').insertOne({ userId, title, textAreaContent, created: new Date() });
+        const likes =[];
+        const result = await db.collection('posts').insertOne({subject, userId, title, textAreaContent, created: new Date(), likes });
         console.log('Post inserted:', result);
         return result;
     } catch (error) {
