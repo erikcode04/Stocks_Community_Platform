@@ -22,3 +22,13 @@ exports.getPosts = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 }
+
+exports.likePost = async (req, res) => {
+    try {
+        const { postId, userId } = req.body;
+        await postsService.likePost(postId, userId);
+        res.status(200).json({ message: "Post liked" });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}

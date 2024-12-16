@@ -1,24 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import "../styles/feedPage.css";
 import { AiFillLike } from "react-icons/ai";
 import { AiOutlineLike } from "react-icons/ai";
+import { AuthContext } from "../agils/checkAuth";
 
 
 const FeedPage = () => {
+    const { userInfo } = useContext(AuthContext);
     const [posts, setPosts] = useState([]);
 
     async function fetchPosts() {
         const response = await axios("http://localhost:5000/posts/getPosts");
         const data = await response.data;
         console.log(data);
-        setPosts(data.reverse()); // Update state with fetched posts
+        setPosts(data.reverse());
     }
 
    async function likePost(event) {
-      
-        console.log("likePost with postId", event._id);
+    
+        const response = await axios.post("http://localhost:5000/posts/likePost", { postId: event._id, userId: userInfo.userId });
+        console.log(response);
     }
 
 

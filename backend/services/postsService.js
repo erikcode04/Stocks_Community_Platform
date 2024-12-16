@@ -50,7 +50,30 @@ async function getPosts() {
 }
 
 
+async function likePost(postId, userId) {   
+    await connectDB();
+    const db = client.db();
+    if (!db) {
+        throw new Error('Failed to connect to the database');
+    }
+    try {
+        const result = await db.collection('posts').updateOne({ _id: new ObjectId(postId) }, { $push: { likes: userId } });
+        console.log('Post liked:', result);
+        return result;
+    } catch (error) {
+        console.error('Error liking post:', error);
+        throw error;
+    }
+}
+
+
+
+
+
+
+
 module.exports = {
     post,
-    getPosts
+    getPosts,
+    likePost
 };
