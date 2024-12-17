@@ -66,7 +66,21 @@ async function likePost(postId, userId) {
     }
 }
 
-
+async function unlikePost(postId, userId) {
+    await connectDB();
+    const db = client.db();
+    if (!db) {
+        throw new Error('Failed to connect to the database');
+    }   
+    try {
+        const result = await db.collection('posts').updateOne({ _id: new ObjectId(postId) }, { $pull: { likes: userId } });
+        console.log('Post unliked:', result);
+        return result;
+    } catch (error) {
+        console.error('Error unliking post:', error);
+        throw error;
+    }
+}
 
 
 
@@ -75,5 +89,6 @@ async function likePost(postId, userId) {
 module.exports = {
     post,
     getPosts,
-    likePost
+    likePost,
+    unlikePost
 };

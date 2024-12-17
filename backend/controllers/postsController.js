@@ -32,3 +32,13 @@ exports.likePost = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 }
+
+exports.unlikePost = async (req, res) => {
+    try {
+        const { postId, userId } = req.body;
+        await postsService.unlikePost(postId, userId);
+        res.status(200).json({ message: "Post unliked" });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}

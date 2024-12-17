@@ -7,4 +7,5 @@ const router = express.Router();
 router.post('/post', postsController.post);
 router.get('/getPosts', postsController.getPosts);
 router.post('/likePost', postsController.likePost);
+router.post('/unlikePost', postsController.unlikePost);
 module.exports = router;
