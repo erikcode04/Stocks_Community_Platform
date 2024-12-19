@@ -23,6 +23,7 @@ exports.getPosts = async (req, res) => {
     }
 }
 
+
 exports.likePost = async (req, res) => {
     try {
         const { postId, userId } = req.body;

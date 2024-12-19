@@ -26,8 +26,9 @@ async function login(email, password) {
     console.log('Invalid password inside authService');
     throw new Error('Invalid password');
   }
+  console.log("Token is being generated, for the user", user);
 console.log("Token is being generated");
-  const token = jwt.sign({ userId: user._id, email, userName: user.userName }, secretKey, { expiresIn: '1h' });
+  const token = jwt.sign({ userId: user._id, email, userName: user.userName, profilePicture : user.profilePicture }, secretKey, { expiresIn: '1h' });
   console.log("Token is generated", token);
   return token;
 }
@@ -50,7 +51,9 @@ async function signup(email, userName, password) {
   }
   try {
        const hashedPassword = await bcrypt.hash(password, 10);
-    const result = await db.collection('users').insertOne({ email, userName, hashedPassword });
+       const profilePicture = 'potionProfilePicture';
+       joinedDate = new Date();
+    const result = await db.collection('users').insertOne({ email, userName, hashedPassword, profilePicture, joinedDate });
     console.log('User inserted:', result);
     return result;
   } catch (error) {
