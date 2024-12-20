@@ -43,3 +43,14 @@ exports.unlikePost = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 }
+
+
+exports.getPostsByUserId = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const posts = await postsService.getPostsByUserId(userId);
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}

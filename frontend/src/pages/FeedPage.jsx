@@ -5,7 +5,7 @@ import "../styles/feedPage.css";
 import { AiFillLike } from "react-icons/ai";
 import { AiOutlineLike } from "react-icons/ai";
 import { AuthContext } from "../agils/checkAuth";
-
+import { profilePictures} from "../services/getProfilePictures";
 
 const FeedPage = () => {
     const { userInfo } = useContext(AuthContext);
@@ -56,6 +56,12 @@ const FeedPage = () => {
                         <h3 className="feed-postTitle" >{post.title}</h3>
                         <p className="feed-postTextContent" > {post.textAreaContent}</p>
                         <p className="feed-postAuther"><strong>Author:</strong> {post.user.userName}</p>
+                        <div className="feed-profilePicture">
+                        <img
+                            className="feed-postImage"
+                            src={profilePictures.find(picture => picture.name === post.user.profilePicture)?.src}
+                            alt="profile"
+                        />                        </div>
                         <p className="feed-postCreatedDate" ><strong>Created:</strong> {new Date(post.created).toLocaleString()}</p>
                         <div>
                             <button className="feed-postButton"    onClick={() => {

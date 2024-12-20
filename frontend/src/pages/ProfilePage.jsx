@@ -4,12 +4,14 @@ import Navbar from '../components/Navbar';
 import { profilePictures } from '../services/getProfilePictures';
 import ChooseImage from '../components/ChooseImage';
 import '../styles/profilePage.css';
+import axios from 'axios';
 
 
 function ProfilePage() {
 const { userInfo } = useContext(AuthContext);
 const [profilePicture, setProfilePicture] = useState(null);
 const [chooseImage, setChooseImage] = useState(false);
+const [posts, setPosts] = useState([]);
 
 
 useEffect(() => {
@@ -23,6 +25,22 @@ useEffect(() => {
 }
 , [userInfo.profilePicture]);
 
+useEffect(() => {
+    getUserPosts();
+}
+, []);
+
+
+async function getUserPosts() {
+    try {
+        const response = await axios.get(`http://localhost:5000/posts/getPostsByUserId/${userInfo.userId}`);
+        console.log("response", response);
+        setPosts(response.data);
+    } catch (error) {
+        console.error('Error getting posts:', error);
+    }
+}
+
     return (
       <div> 
         <Navbar />
@@ -35,7 +53,7 @@ useEffect(() => {
                 <img src={profilePicture} alt="Profile" />
             </div>
             <button onClick={() => setChooseImage(!chooseImage)} className="profilePage-chooseImageButton">
-                Choose Profile Picture
+                Change Profile Picture
             </button>
             <div className="profile-details">
                 <p><strong>Username:</strong> {userInfo.userName}</p>
@@ -43,6 +61,15 @@ useEffect(() => {
                 <p><strong>Email:</strong> {userInfo.email}</p>
                 <p><strong>Joined:</strong> {new Date(userInfo.joinedDate).toLocaleDateString()}</p>
             </div>
+            <div className="profilePage-posts">
+                <h2>Posts</h2>
+                {posts.map(post => (
+                    <div key={post._id} className="profilePage-post">
+                        <h3 className='profilePage-postTitle' >{post.title}</h3>
+                        <p className='profilePage-postTextArea' >{post.textAreaContent}</p>
+                    </div>
+                ))}
+        </div>
         </div>
         </div>
     );

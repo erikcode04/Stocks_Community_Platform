@@ -6,7 +6,7 @@ const secretKey = process.env.JWT_SECRET;
 
 async function setProfilePicture(profilePicture, userInfo) {
     console.log('setProfilePicture function inside usersService, profilePicture:', profilePicture, 'userInfo:', userInfo);
-    await connectDB(); // Ensure the database is connected
+    await connectDB(); 
     const db = client.db();
     if (!db) {
         throw new Error('Failed to connect to the database');
@@ -16,7 +16,7 @@ async function setProfilePicture(profilePicture, userInfo) {
         const result = await db.collection('users').updateOne({ email: userInfo.email }, { $set: { profilePicture } });
         console.log('Profile picture updated:', result);
 
-        // Generate a new token with updated claims
+      
         const newToken = jwt.sign(
             { email: userInfo.email, profilePicture: profilePicture, userId: userInfo.userId, userName: userInfo.userName },
             secretKey,

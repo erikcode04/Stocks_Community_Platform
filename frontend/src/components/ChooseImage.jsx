@@ -3,6 +3,7 @@ import axios from 'axios';
 import './componentStyles/chooseImage.css';
 import { profilePictures } from '../services/getProfilePictures';
 import { AuthContext } from '../agils/checkAuth';
+
 const ProfilePictureGrid = () => {
     const { userInfo } = useContext(AuthContext);
   const [selectedPicture, setSelectedPicture] = useState(null);
