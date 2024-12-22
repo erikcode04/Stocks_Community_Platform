@@ -45,11 +45,14 @@ exports.unlikePost = async (req, res) => {
 }
 
 
-exports.getPostsByUserId = async (req, res) => {
+
+
+
+exports.visitProfile = async (req, res) => {
     try {
         const { userId } = req.params;
-        const posts = await postsService.getPostsByUserId(userId);
-        res.status(200).json(posts);
+        const sendBack = await postsService.visitProfile(userId);
+        res.status(200).json(sendBack);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

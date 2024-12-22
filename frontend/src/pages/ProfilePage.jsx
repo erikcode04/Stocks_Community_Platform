@@ -46,6 +46,7 @@ async function getUserPosts() {
         <Navbar />
         <div className="profile-container">
             <h1>Profile</h1>
+            <div className="profile-details">
             <div className="profilePage-chooseImageContainer">
             {chooseImage && <ChooseImage />}
             </div>
@@ -55,9 +56,7 @@ async function getUserPosts() {
             <button onClick={() => setChooseImage(!chooseImage)} className="profilePage-chooseImageButton">
                 Change Profile Picture
             </button>
-            <div className="profile-details">
                 <p><strong>Username:</strong> {userInfo.userName}</p>
-
                 <p><strong>Email:</strong> {userInfo.email}</p>
                 <p><strong>Joined:</strong> {new Date(userInfo.joinedDate).toLocaleDateString()}</p>
             </div>

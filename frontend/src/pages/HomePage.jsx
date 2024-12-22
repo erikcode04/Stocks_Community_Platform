@@ -45,7 +45,7 @@ function HomePage() {
         <div id='homePage-topContainer'>
           <div id='homePage-topImageContainer'> 
           <img id='homePage-topImage' src={topImage} alt="Business" />
-          </div>  
+          </div>    
             <div className='homePage-basicBox'>
        {userInfo && <h1 id='homePage-header'>Hello {userInfo.userName} </h1>}
         <p id='homePage-welcomingText'>There is always facts about stocks to share or read about</p>
