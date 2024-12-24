@@ -56,11 +56,11 @@ exports.friendStatusLogic = async (req, res) => {
                 return res.status(400).json({ message: "Friend status and user info are required" });
             }
             console.log("userId inside friendStatusLogic controller", userId);
-            const newToken = await usersService.friendStatusLogic( userId, otherUserId, userInfo);
-            if (newToken) {
+            const {newToken, friendStatus}  = await usersService.friendStatusLogic( userId, otherUserId, userInfo);
+            if (newToken && friendStatus) {
                console.log("newToken inside friendStatusLogic controller", newToken);
                 res.cookie('token', newToken, { httpOnly: true, secure: true, sameSite: 'Strict' });
-                return res.json({ token: newToken });
+                return res.json({ token: newToken, friendStatus: friendStatus });
             } else {
                 return res.status(500).json({ message: "Failed to update friend status" });
             }

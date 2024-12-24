@@ -39,10 +39,8 @@ async function friendStatusLogic(userId , otherUserId, userInfo) {
         throw new Error('Failed to connect to the database');
     }
     try {
-        console.log(1)
         const user = await db.collection('users').findOne({ _id: new ObjectId(userId) });
         const otherUser = await db.collection('users').findOne({ _id: new ObjectId(otherUserId) });
-        console.log(2)
         if (user.friends.find(friend => friend.userId === otherUserId)) {
             console.log('Already friends');
              const bulkOps = [
@@ -69,7 +67,8 @@ async function friendStatusLogic(userId , otherUserId, userInfo) {
                 secretKey,
                 { expiresIn: '1h' }
             );
-            return newToken;
+            const friendStatus = "Add Friend";
+            return {newToken, friendStatus};
         }
         if (user.sentFriendRequests.find(request => request.userId === otherUserId)) {
            console.log("user info where I hope it exists", userInfo);
@@ -98,7 +97,8 @@ async function friendStatusLogic(userId , otherUserId, userInfo) {
                 secretKey,
                 { expiresIn: '1h' }
             );
-            return newToken;
+            const friendStatus = "Add Friend";
+            return {newToken, friendStatus};
         }
         if (user.friendRequests.find(request => request.userId === otherUserId)) {
             console.log('Friend request already received');
@@ -133,13 +133,14 @@ async function friendStatusLogic(userId , otherUserId, userInfo) {
                 throw new Error('Failed to update friend status');
             }
             const friendRequests = user.friendRequests.filter(request => request.userId !== otherUserId);
-            const friends = user.friends.concat({ userId: otherUserId, userName: otherUser.userName });
+            const friends = user.friends.concat(otherUserId);
             const newToken = jwt.sign(
                 { email: user.email, profilePicture: user.profilePicture, userId , userName: user.userName, friends: friends, friendRequests: friendRequests, sentFriendRequests: user.sentFriendRequests },
                 secretKey,
                 { expiresIn: '1h' }
             );
-            return newToken;
+            const friendStatus = "Friends";
+            return {newToken, friendStatus};
         }
         console.log('Not friends, no request sent or received and lets check userInfo', userInfo);
         console.log('Sending friend request...');
@@ -161,14 +162,15 @@ async function friendStatusLogic(userId , otherUserId, userInfo) {
         if (result.modifiedCount === 0) {
             throw new Error('Failed to update friend status');
         }
-        const sentFriendRequests = user.sentFriendRequests.concat({ userId: otherUserId, userName: otherUser.userName });
+        const sentFriendRequests = user.sentFriendRequests.concat(otherUserId);
         const newToken = jwt.sign(
             { email: user.email, profilePicture: user.profilePicture, userId , userName: user.userName, friends: user.friends, friendRequests: user.friendRequests, sentFriendRequests: sentFriendRequests },
             secretKey,
             { expiresIn: '1h' }
         );
         console.log('New token:', newToken);
-        return newToken;
+        const friendStatus = "Request Sent";
+        return {newToken, friendStatus};
     } catch (error) {
         console.error('Failed to update friend status:', error);
         throw error;

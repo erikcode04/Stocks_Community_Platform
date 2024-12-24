@@ -13,7 +13,7 @@ function VisitProfilePage() {
 const { userInfo } = useContext(AuthContext);
 const [profilePicture, setProfilePicture] = useState(null);
 const [visitedProfile, setVisitedProfile] = useState(null);
-const [friendStatus, setFriendStatus] = useState("add friend");
+const [friendStatus, setFriendStatus] = useState("Add Friend");
 const [posts, setPosts] = useState([]);
 const { userId } = useParams();
 
@@ -28,10 +28,11 @@ async function prepareProfile() {
             const foundImage = (profilePictures.find(picture => picture.name === response.data.user.profilePicture));
             console.log("foundImage", foundImage);
             setProfilePicture(foundImage.src);
-          userInfo.friends.map(friend => { if (friend.userId === userId) { setFriendStatus("friends"); } });
-            userInfo.sentFriendRequests.map(request => { if (request.userId === userId) { setFriendStatus("received"); } });
-            userInfo.friendRequests.map(request => { if (request.userId === userId) { setFriendStatus("sent"); } });
-           
+           if (userInfo.userId !== userId) { 
+          userInfo.friends.map(friend => { if (friend === userId) { setFriendStatus("Friends"); } });
+            userInfo.sentFriendRequests.map(request => { if (request === userId) { setFriendStatus("Request Sent"); } });
+            userInfo.friendRequests.map(request => { if (request === userId) { setFriendStatus("Accept Friend Request"); } });
+           }
     } catch (error) {
         console.error('Error getting posts:', error);
     }
@@ -43,6 +44,7 @@ async function FriendStatusHandler() {
       console.log("loaded page", userId);
         const response = await axios.post(`http://localhost:5000/users/friendStatusLogic`, { userId }, {withCredentials: true});
         console.log("friend adding response response", response);
+        setFriendStatus(response.data.friendStatus);
     } catch (error) {
         console.error('Error getting friend status:', error);
     }
@@ -79,8 +81,8 @@ useEffect(() => {
                         </>
                     )}
             </div>
-            <button className="profilePage-addFriendButton" onClick={FriendStatusHandler} > {friendStatus} </button>
-            <div className="profilePage-posts">
+{userId !== userInfo.userId &&    <button className="profilePage-addFriendButton" onClick={FriendStatusHandler} > {friendStatus} </button>
+}            <div className="profilePage-posts">
                 <h2>Posts</h2>
                 {posts.map(post => (
                     <div key={post._id} className="profilePage-post">
