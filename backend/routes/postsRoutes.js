@@ -8,5 +8,4 @@ router.post('/post', postsController.post);
 router.get('/getPosts', postsController.getPosts);
 router.post('/likePost', postsController.likePost);
 router.post('/unlikePost', postsController.unlikePost);
-router.get('/visitProfile/:userId', postsController.visitProfile);
 module.exports = router;

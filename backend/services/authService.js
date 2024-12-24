@@ -28,7 +28,7 @@ async function login(email, password) {
   }
   console.log("Token is being generated, for the user", user);
 console.log("Token is being generated");
-  const token = jwt.sign({ userId: user._id, email, userName: user.userName, profilePicture : user.profilePicture }, secretKey, { expiresIn: '1h' });
+  const token = jwt.sign({ userId: user._id, email, userName: user.userName, profilePicture : user.profilePicture, friends : user.friends, friendRequests : user.friendRequests, sentFriendRequests : user.sentFriendRequests }, secretKey, { expiresIn: '1h' });
   console.log("Token is generated", token);
   return token;
 }
@@ -49,11 +49,23 @@ async function signup(email, userName, password) {
   if (!db) {
     throw new Error('Failed to connect to the database');
   }
+
+
+
   try {
+    const user = await db.collection('users').findOne({
+      $or: [{ email }, { userName }]
+    });
+    if (user) {
+      throw new Error('User already exists');
+    }
        const hashedPassword = await bcrypt.hash(password, 10);
        const profilePicture = 'potionProfilePicture';
+        const friends = [];
+        const friendRequests = [];
+        const sentFriendRequests = [];
        joinedDate = new Date();
-    const result = await db.collection('users').insertOne({ email, userName, hashedPassword, profilePicture, joinedDate });
+    const result = await db.collection('users').insertOne({ email, userName, hashedPassword, profilePicture, friends, friendRequests, sentFriendRequests, joinedDate });
     console.log('User inserted:', result);
     return result;
   } catch (error) {

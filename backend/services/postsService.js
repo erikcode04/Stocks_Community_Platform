@@ -82,23 +82,7 @@ async function unlikePost(postId, userId) {
     }
 }
 
-async function visitProfile(userId) {
-    await connectDB();
-    const db = client.db();
-    if (!db) {
-        throw new Error('Failed to connect to the database');
-    }
-    try {
-        const posts = await db.collection('posts').find({ userId }).toArray();
-        const user = await db.collection('users').findOne({ _id: new ObjectId(userId) });
-        const sanitizedUser = { _id: user._id, userName: user.userName, email: user.email, joinedDate: user.joinedDate, profilePicture: user.profilePicture };
-        const sendBack = { user: sanitizedUser, posts };
-        return sendBack;
-    } catch (error) {
-        console.error('Error finding posts by user:', error);
-        throw error;
-    }
-}
+
 
 
 
@@ -109,5 +93,4 @@ module.exports = {
     getPosts,
     likePost,
     unlikePost,
-    visitProfile
 };

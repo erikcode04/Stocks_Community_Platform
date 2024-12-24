@@ -14,10 +14,18 @@ function SignupPage() {
     console.log('Email:', email);
     console.log('Username:', userName);
     console.log('Password:', password);
-
+try {
    const response = await axios.post('http://localhost:5000/auth/signup', { email, userName, password });
    console.log("response");
     console.log("response", response.data);
+    alert('Signup successful');
+    window.location.href = '/login';
+    
+}
+catch (error) {
+  console.error(error);
+  alert('Signup failed');
+}
   };
 
   return (

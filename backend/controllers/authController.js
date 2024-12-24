@@ -51,11 +51,13 @@ exports.verifyToken = async (req, res) => {
   if (token) {
       try {
           const decoded = jwt.verify(token, process.env.JWT_SECRET); 
-          console.log("decoded", decoded);
           const sendBack = { userId: decoded.userId,
            email: decoded.email,
            userName: decoded.userName,
-            profilePicture: decoded.profilePicture
+            profilePicture: decoded.profilePicture,
+            friends: decoded.friends,
+            friendRequests: decoded.friendRequests,
+            sentFriendRequests: decoded.sentFriendRequests
            };
           res.status(200).json({ success: true, userInfo: sendBack });
       } catch (err) {
