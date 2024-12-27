@@ -118,6 +118,24 @@
     color: #555;
 }
 
+.profilePage-deleteButton {
+    display: block;
+    padding: 5px;
+    background-color: #dc3545;
+    color: #fff;
+    text-align: center;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+    width: 50px;
+    margin-top: 10px;
+}
+
+.profilePage-deleteButton:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
 
 
 /* Responsive adjustments */

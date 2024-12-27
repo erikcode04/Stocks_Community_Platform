@@ -99,7 +99,23 @@ async function getPostsByUserId(userId) {
 }
 
 
-
+async function deletePost(post) {
+    console.log('deletePost function inside postsService');
+    await connectDB();
+    const db = client.db();
+    if (!db) {
+        throw new Error('Failed to connect to the database');
+    }
+    try {
+        console.log('post', post);
+        const result = await db.collection('posts').deleteOne({ _id: new ObjectId(post._id) });
+        console.log('Post deleted:', result);
+        return result;
+    } catch (error) {
+        console.error('Error deleting post:', error);
+        throw error;
+    }
+}
 
 
 
@@ -110,4 +126,5 @@ module.exports = {
     likePost,
     unlikePost,
     getPostsByUserId,
+    deletePost,
 };

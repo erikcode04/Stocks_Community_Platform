@@ -42,6 +42,20 @@ async function getUserPosts() {
     }
 }
 
+
+async function deletePost(post) {
+    try {
+    console.log("post", post);
+    const response = await axios.delete("http://localhost:5000/posts/deletePost", { data: { post }, withCredentials: true });
+    if (response.status === 200) {
+        const newPosts = posts.filter(p => p._id !== post._id);
+        setPosts(newPosts);
+    }
+    } catch (error) {
+        console.error('Error deleting post:', error);
+    }
+}
+
     return (
       <div> 
         <Navbar />
@@ -67,6 +81,7 @@ async function getUserPosts() {
                     <div key={post._id} className="profilePage-post">
                         <h3 className='profilePage-postTitle' >{post.title}</h3>
                         <p className='profilePage-postTextArea' >{post.textAreaContent}</p>
+                        <button className='profilePage-deleteButton' onClick={() => deletePost(post)} > delete </button>
                     </div>
                 ))}
         </div>

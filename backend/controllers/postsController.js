@@ -56,6 +56,24 @@ exports.getPostsByUserId = async (req, res) => {
     }
 }
 
+exports.deletePost = async (req, res) => {
+    const token = req.cookies.token;
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        if (decoded.userId === req.body.post.userId) {
+        console.log("decoded", decoded);
+        const { postId } = req.body.post.userId;
+        await postsService.deletePost(req.body.post);
+        res.status(200).json({ message: "Post deleted" });
+        }
+        else {
+            res.status(400).json({ message: "You are not authorized to delete this post" });
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 
 
 
