@@ -5,7 +5,7 @@ import { profilePictures } from '../services/getProfilePictures';
 import ChooseImage from '../components/ChooseImage';
 import '../styles/profilePage.css';
 import axios from 'axios';
-
+import { handleLogout } from '../agils/logOut';
 
 function ProfilePage() {
 const { userInfo } = useContext(AuthContext);
@@ -56,6 +56,21 @@ async function deletePost(post) {
     }
 }
 
+async function deleteAccount() {
+    try {
+        const response = await axios.delete("http://localhost:5000/users/deleteAccount", { withCredentials: true });
+        if (response.status === 200) {
+            const logOutResponse = await handleLogout();
+            if (logOutResponse.ok === false) {
+          alert('Failed to log out, you have to logout manually:(');
+        }
+    }
+}
+catch (error) {
+    console.error('Error deleting account:', error);
+}
+}
+
     return (
       <div> 
         <Navbar />
@@ -84,6 +99,9 @@ async function deletePost(post) {
                         <button className='profilePage-deleteButton' onClick={() => deletePost(post)} > delete </button>
                     </div>
                 ))}
+        </div>
+        <div className='profilePage-deleteAccountContainer'> 
+            <button className='profilePage-deleteAccountButton' onClick={deleteAccount} > Delete Account </button>
         </div>
         </div>
         </div>

@@ -7,4 +7,5 @@ const router = express.Router();
 router.post('/setProfilePicture', usersController.setProfilePicture);
 router.post('/friendStatusLogic', usersController.friendStatusLogic);
 router.get('/visitProfile/:userId', usersController.visitProfile);
+router.delete('/deleteAccount', usersController.deleteAccount);
 module.exports = router;

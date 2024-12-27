@@ -1,10 +1,8 @@
 export const handleLogout = async () => {
     try {
-
-
         const response = await fetch('http://localhost:5000/auth/logout', {
             method: 'POST',
-            credentials: 'include' // Include cookies in the request
+            credentials: 'include' 
         });
 
         if (response.ok) {

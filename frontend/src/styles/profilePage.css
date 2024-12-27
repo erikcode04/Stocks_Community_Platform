@@ -137,6 +137,27 @@
     transform: scale(1.05);
 }
 
+.profilePage-deleteAccountContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.profilePage-deleteAccountButton {
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.profilePage-deleteAccountButton:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
 
 /* Responsive adjustments */
 @media (max-width: 800px) {

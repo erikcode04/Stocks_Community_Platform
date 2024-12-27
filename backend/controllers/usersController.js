@@ -105,4 +105,30 @@ exports.visitProfile = async (req, res) => {
     }
 }
 
+exports.deleteAccount = async (req, res) => {
+    const token = req.cookies.token;
+    if (!token) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        if (decoded) {
+            const userId = decoded.userId;
+            if (!userId) {
+                return res.status(400).json({ message: "User info is required" });
+            }
+
+            const response = await usersService.deleteAccount(userId);
+            if (response) {
+                return res.json({ message: "Account deleted" });
+            } else {
+                return res.status(500).json({ message: "Failed to delete account" });
+            }
+        }
+    } catch (error) {
+        return res.status(401).json({ message: "Invalid token" });
+    }
+}
+
 

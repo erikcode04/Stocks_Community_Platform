@@ -61,8 +61,6 @@ exports.deletePost = async (req, res) => {
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         if (decoded.userId === req.body.post.userId) {
-        console.log("decoded", decoded);
-        const { postId } = req.body.post.userId;
         await postsService.deletePost(req.body.post);
         res.status(200).json({ message: "Post deleted" });
         }

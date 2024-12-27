@@ -208,8 +208,29 @@ async function visitProfile(otherUserId, userInfo) {
 }
 
 
+async function deleteAccount(userId) {
+    await connectDB();
+    const db = client.db();
+    if (!db) {
+        throw new Error('Failed to connect to the database');
+    }
+    try {
+        console.log('Deleting account...');
+        const result = await db.collection('users').deleteOne({ _id : new ObjectId(userId)});
+        if (result.deletedCount === 1) {
+            await db.collection('posts').deleteMany({ userId: userId });   
+        } 
+        return result;
+    } catch (error) {
+        console.error('Failed to delete account:', error);
+        throw error;
+    }
+}
+
+
 module.exports = {
     setProfilePicture,
     friendStatusLogic,
-    visitProfile
+    visitProfile,
+    deleteAccount
 };
