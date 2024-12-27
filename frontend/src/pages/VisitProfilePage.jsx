@@ -21,18 +21,15 @@ const { userId } = useParams();
 async function prepareProfile() {
     try {
         console.log("loaded page", userId);
-        const response = await axios.get(`http://localhost:5000/users/visitProfile/${userId}`);
+        const response = await axios.get(`http://localhost:5000/users/visitProfile/${userId}`, {withCredentials: true});
         console.log("response where I hope both user details and post details are", response);
-        setPosts(response.data.posts);
-        setVisitedProfile(response.data.user);
-            const foundImage = (profilePictures.find(picture => picture.name === response.data.user.profilePicture));
+        setPosts(response.data.sendBack.posts);
+        setVisitedProfile(response.data.sendBack.user);
+        setFriendStatus(response.data.friendStatus);
+            const foundImage = (profilePictures.find(picture => picture.name === response.data.sendBack.user.profilePicture));
             console.log("foundImage", foundImage);
             setProfilePicture(foundImage.src);
-           if (userInfo.userId !== userId) { 
-          userInfo.friends.map(friend => { if (friend === userId) { setFriendStatus("Friends"); } });
-            userInfo.sentFriendRequests.map(request => { if (request === userId) { setFriendStatus("Request Sent"); } });
-            userInfo.friendRequests.map(request => { if (request === userId) { setFriendStatus("Accept Friend Request"); } });
-           }
+      
     } catch (error) {
         console.error('Error getting posts:', error);
     }

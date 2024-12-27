@@ -72,11 +72,35 @@ exports.friendStatusLogic = async (req, res) => {
 
 
 exports.visitProfile = async (req, res) => {
+    console.log("req.body inside friendStatusLogic controller", req.cookies);
+    console.log("req.params inside friendStatusLogic controller", req.params);
+    const token = req.cookies.token;
+    if (!token) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+    console.log("token inside friendStatusLogic controller", token);
+
     try {
-        const { userId } = req.params;
-        const sendBack = await usersService.visitProfile(userId);
-        res.status(200).json(sendBack);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log("decoded inside friendStatusLogic controller", decoded);
+        if (decoded) {
+           const userId = decoded.userId;
+            const otherUserId = req.params.userId;
+            const userInfo = decoded;
+            console.log("we did som variables", userId, otherUserId);
+            if (!userId) {
+                return res.status(400).json({ message: "Friend status and user info are required" });
+            }
+            const { sendBack, friendStatus }  = await usersService.visitProfile( otherUserId, userInfo);
+            console.log("sendBack inside friendStatusLogic controller", sendBack);
+            console.log("friendStatus inside friendStatusLogic controller", friendStatus);
+            if (sendBack) {
+                return res.json( {sendBack, friendStatus });
+            } else {
+                return res.status(500).json({ message: "Failed to update friend status" });
+            }
+        }
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        return res.status(401).json({ message: "Invalid token" });
     }
 }

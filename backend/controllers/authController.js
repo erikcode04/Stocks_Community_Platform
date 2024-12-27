@@ -51,7 +51,8 @@ exports.verifyToken = async (req, res) => {
   if (token) {
       try {
           const decoded = jwt.verify(token, process.env.JWT_SECRET); 
-          const sendBack = { userId: decoded.userId,
+         
+          const sendBack = { userId : decoded.userId,
            email: decoded.email,
            userName: decoded.userName,
             profilePicture: decoded.profilePicture,

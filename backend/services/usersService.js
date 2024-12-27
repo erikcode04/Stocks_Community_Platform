@@ -41,19 +41,20 @@ async function friendStatusLogic(userId , otherUserId, userInfo) {
     try {
         const user = await db.collection('users').findOne({ _id: new ObjectId(userId) });
         const otherUser = await db.collection('users').findOne({ _id: new ObjectId(otherUserId) });
-        if (user.friends.find(friend => friend.userId === otherUserId)) {
+        console.log("userid and otheruserid", userId, otherUserId);
+        if (user.friends.find(friend => friend === otherUserId)) {
             console.log('Already friends');
              const bulkOps = [
                 {
                     updateOne: {
                         filter: { _id: new ObjectId(userId) },
-                        update: { $pull: { friends: { userId: otherUserId } } }
+                        update: { $pull: { friends: otherUserId  } }
                     }
                 },
                 {
                     updateOne: {
                         filter: { _id: new ObjectId(otherUserId) },
-                        update: { $pull: { friends: { userId: userId } } }
+                        update: { $pull: { friends: userId  } }
                     }
                 },
             ];
@@ -61,7 +62,7 @@ async function friendStatusLogic(userId , otherUserId, userInfo) {
             if (result.modifiedCount === 0) {
                 throw new Error('Failed to update friend status');
             }
-            const friends = user.friends.filter(friend => friend.userId !== otherUserId);
+            const friends = user.friends.filter(friend => friend !== otherUserId);
             const newToken = jwt.sign(
                 { email: user.email, profilePicture: user.profilePicture, userId , userName: user.userName, friends: friends, friendRequests: user.friendRequests, sentFriendRequests: user.sentFriendRequests },
                 secretKey,
@@ -70,20 +71,20 @@ async function friendStatusLogic(userId , otherUserId, userInfo) {
             const friendStatus = "Add Friend";
             return {newToken, friendStatus};
         }
-        if (user.sentFriendRequests.find(request => request.userId === otherUserId)) {
+        if (user.sentFriendRequests.find(request => request === otherUserId)) {
            console.log("user info where I hope it exists", userInfo);
             console.log('Friend request already sent');
            const bulkOps = [
                  {
                     updateOne: { 
                         filter: { _id: new ObjectId(userId) },
-                        update: { $pull: { sentFriendRequests: { userId: otherUserId } } }
+                        update: { $pull: { sentFriendRequests: otherUserId } } 
                     }
                 },
                 {
                     updateOne: {
                         filter: { _id: new ObjectId(otherUserId) },
-                        update: { $pull: { friendRequests: { userId: userId } } }
+                        update: { $pull: { friendRequests: userId  } }
                     }
                 },
             ];
@@ -91,7 +92,7 @@ async function friendStatusLogic(userId , otherUserId, userInfo) {
            if (result.modifiedCount === 0) {
                 throw new Error('Failed to update friend status');
             }
-            const friendRequests = user.friendRequests.filter(request => request.userId !== otherUserId);
+            const friendRequests = user.friendRequests.filter(request => request !== otherUserId);
             const newToken = jwt.sign(
                 { email: user.email, profilePicture: user.profilePicture, userId , userName: user.userName, friends: user.friends, friendRequests: friendRequests, sentFriendRequests: user.sentFriendRequests },
                 secretKey,
@@ -100,31 +101,31 @@ async function friendStatusLogic(userId , otherUserId, userInfo) {
             const friendStatus = "Add Friend";
             return {newToken, friendStatus};
         }
-        if (user.friendRequests.find(request => request.userId === otherUserId)) {
+        if (user.friendRequests.find(request => request === otherUserId)) {
             console.log('Friend request already received');
             const bulkOps = [
                 {
                     updateOne: {
                         filter: { _id: new ObjectId(userId) },
-                        update: { $pull: { friendRequests: { userId: otherUserId } } }
+                        update: { $pull: { friendRequests:  otherUserId } }
                     }
                 },
                 {
                     updateOne: {
                         filter: { _id: new ObjectId(userId) },
-                        update: { $push: { friends: { userId: otherUserId } } }
+                        update: { $push: { friends:  otherUserId  } }
                     }
                 },
                 {
                     updateOne: {
                         filter: { _id: new ObjectId(otherUserId) },
-                        update: { $pull: { sentFriendRequests: { userId: userId } } }
+                        update: { $pull: { sentFriendRequests: userId  } }
                     }
                 },
                 {
                     updateOne: {
                         filter: { _id: new ObjectId(otherUserId) },
-                        update: { $push: { friends: { userId: userId } } }
+                        update: { $push: { friends: userId } }
                     }
                 }
             ];
@@ -132,7 +133,7 @@ async function friendStatusLogic(userId , otherUserId, userInfo) {
             if (result.modifiedCount === 0) {
                 throw new Error('Failed to update friend status');
             }
-            const friendRequests = user.friendRequests.filter(request => request.userId !== otherUserId);
+            const friendRequests = user.friendRequests.filter(request => request !== otherUserId);
             const friends = user.friends.concat(otherUserId);
             const newToken = jwt.sign(
                 { email: user.email, profilePicture: user.profilePicture, userId , userName: user.userName, friends: friends, friendRequests: friendRequests, sentFriendRequests: user.sentFriendRequests },
@@ -148,15 +149,15 @@ async function friendStatusLogic(userId , otherUserId, userInfo) {
             {
                 updateOne: {
                     filter: { _id: new ObjectId(userId) },
-                    update: { $push: { sentFriendRequests: { userId: otherUserId, userName: otherUser.userName } } }
+                    update: { $push: { sentFriendRequests: otherUserId } }
                 }
             },
             {
                 updateOne: {
                     filter: { _id: new ObjectId(otherUserId) },
-                    update: { $push: { friendRequests: { userId: userId, userName: user.userName } } }
-                }
+                    update: { $push: { friendRequests: userId  }}
             }
+        }
       ];
         const result = await db.collection('users').bulkWrite(bulkOps);
         if (result.modifiedCount === 0) {
@@ -177,18 +178,29 @@ async function friendStatusLogic(userId , otherUserId, userInfo) {
     }
 }
 
-async function visitProfile(userId) {
+async function visitProfile(otherUserId, userInfo) {
     await connectDB();
+    console.log("otherUserId inside visitProfile function" , otherUserId);
     const db = client.db();
     if (!db) {
         throw new Error('Failed to connect to the database');
     }
     try {
-        const posts = await db.collection('posts').find({ userId }).toArray();
-        const user = await db.collection('users').findOne({ _id: new ObjectId(userId) });
+        const posts = await db.collection('posts').find({ userId : otherUserId }).toArray();
+        console.log("posts inside visitProfile function", posts);
+        console.log("otherUserId inside visitProfile function", otherUserId);
+        const user = await db.collection('users').findOne({ _id: new ObjectId(otherUserId) });
+       let friendStatus = "Add Friend";
+       if (userInfo.userId !== otherUserId) {
+        user.friends.map(friend => { if (friend === userInfo.userId) {  friendStatus = "Friends" } });
+        user.sentFriendRequests.map(request => { if (request === userInfo.userId) { friendStatus = "Accept Friend Request" } });
+        user.friendRequests.map(request => { if (request === userInfo.userId) { friendStatus = "Request Sent"; } });
+       }    
         const sanitizedUser = { _id: user._id, userName: user.userName, email: user.email, joinedDate: user.joinedDate, profilePicture: user.profilePicture,   };
+        console.log("sanitizedUser inside visitProfile function", sanitizedUser);
         const sendBack = { user: sanitizedUser, posts };
-        return sendBack;
+        console.log("sendBack inside visitProfile function", sendBack);
+        return {sendBack, friendStatus};
     } catch (error) {
         console.error('Error finding posts by user:', error);
         throw error;
