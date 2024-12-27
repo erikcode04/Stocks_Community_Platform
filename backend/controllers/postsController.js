@@ -1,5 +1,6 @@
-require("dotenv").config({ path: "./.env.local" });
+require('dotenv').config({ path: './.env.local' });
 const postsService = require("../services/postsService");
+const jwt = require('jsonwebtoken');
 
 exports.post = async (req, res) => {
     try {
@@ -44,6 +45,16 @@ exports.unlikePost = async (req, res) => {
     }
 }
 
+exports.getPostsByUserId = async (req, res) => {
+    try {
+        console.log("req.query", req.query);
+        const { userId } = req.query;
+        const posts = await postsService.getPostsByUserId(userId);
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
 
 
 

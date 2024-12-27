@@ -33,7 +33,8 @@ useEffect(() => {
 
 async function getUserPosts() {
     try {
-        const response = await axios.get(`http://localhost:5000/posts/getPostsByUserId/${userInfo.userId}`);
+        console.log("userInfo.userId", userInfo.userId);
+        const response = await axios.get("http://localhost:5000/posts/getPostsByUserId", { params : { userId: userInfo.userId } });
         console.log("response", response);
         setPosts(response.data);
     } catch (error) {

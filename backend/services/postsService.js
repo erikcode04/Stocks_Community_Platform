@@ -82,6 +82,22 @@ async function unlikePost(postId, userId) {
     }
 }
 
+async function getPostsByUserId(userId) {
+    await connectDB();
+    const db = client.db();
+    if (!db) {
+        throw new Error('Failed to connect to the database');
+    }
+    try {
+        const posts = await db.collection('posts').find({ userId }).toArray();
+        console.log('Posts:', posts);
+        return posts;
+    } catch (error) {
+        console.error('Error finding posts:', error);
+        throw error;
+    }
+}
+
 
 
 
@@ -93,4 +109,5 @@ module.exports = {
     getPosts,
     likePost,
     unlikePost,
+    getPostsByUserId,
 };
