@@ -51,7 +51,9 @@ const FeedPage = () => {
             <Navbar />
             <div id="feed-contentContainer">
                 <h1>Feed</h1>
-                {posts.map(post => (
+                {userInfo.userId && <Link to="/createPost">Create Post</Link>}
+                
+                { userInfo && posts.map(post => (
                     <div key={post._id} className="feed-postContainer">
                         <h3 className="feed-postSubject" >{post.subject}</h3>
                         <h3 className="feed-postTitle" >{post.title}</h3>
@@ -77,7 +79,7 @@ const FeedPage = () => {
                                 }}> {post.likes.length}  {post.likes.includes(userInfo.userId) ? <AiFillLike /> : <AiOutlineLike />} </button>
                         </div>    
                     </div>
-                ))}
+                )) }
             </div>
         </div>
     );

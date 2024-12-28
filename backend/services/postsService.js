@@ -57,6 +57,8 @@ async function likePost(postId, userId) {
         throw new Error('Failed to connect to the database');
     }
     try {
+        console.log('postId', postId);
+        console.log('userId', userId);
         const result = await db.collection('posts').updateOne({ _id: new ObjectId(postId) }, { $push: { likes: userId } });
         console.log('Post liked:', result);
         return result;

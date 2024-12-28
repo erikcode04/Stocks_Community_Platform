@@ -235,6 +235,12 @@ async function deleteAccount(userId) {
                 { $pull: { sentFriendRequests: userId } }
             );
             console.log("resultFromDelSentFriendRequests", resultFromDelSentFriendRequests);
+
+            const resultofDeletingLikes = await db.collection("posts").updateMany(
+                { likes: userId },
+                { $pull: { likes: userId } }
+            );
+            console.log("resultofDeletingLikes", resultofDeletingLikes);
         } 
         return result;
     } catch (error) {

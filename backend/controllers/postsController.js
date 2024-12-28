@@ -28,6 +28,7 @@ exports.getPosts = async (req, res) => {
 exports.likePost = async (req, res) => {
     try {
         const { postId, userId } = req.body;
+        console.log("req.body", req.body);
         await postsService.likePost(postId, userId);
         res.status(200).json({ message: "Post liked" });
     } catch (error) {
