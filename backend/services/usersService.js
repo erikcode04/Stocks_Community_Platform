@@ -215,10 +215,26 @@ async function deleteAccount(userId) {
         throw new Error('Failed to connect to the database');
     }
     try {
+        const usersCollection = db.collection('users');
         console.log('Deleting account...');
-        const result = await db.collection('users').deleteOne({ _id : new ObjectId(userId)});
+        const result = await usersCollection.deleteOne({ _id : new ObjectId(userId)});
         if (result.deletedCount === 1) {
             await db.collection('posts').deleteMany({ userId: userId });   
+         const resultFromDelFriends = await usersCollection.updateMany(
+                { friends: userId },
+                { $pull: { friends: userId } }
+            );
+            console.log("resultFromDelFriends", resultFromDelFriends);
+          const resultFromDelFriendRequests = await usersCollection.updateMany(
+                { friendRequests: userId },
+                { $pull: { friendRequests: userId } }
+            );
+            console.log("resultFromDelFriendRequests", resultFromDelFriendRequests);
+            const resultFromDelSentFriendRequests = await usersCollection.updateMany(
+                { sentFriendRequests: userId },
+                { $pull: { sentFriendRequests: userId } }
+            );
+            console.log("resultFromDelSentFriendRequests", resultFromDelSentFriendRequests);
         } 
         return result;
     } catch (error) {

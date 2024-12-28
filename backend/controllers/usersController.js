@@ -118,7 +118,6 @@ exports.deleteAccount = async (req, res) => {
             if (!userId) {
                 return res.status(400).json({ message: "User info is required" });
             }
-
             const response = await usersService.deleteAccount(userId);
             if (response) {
                 return res.json({ message: "Account deleted" });
