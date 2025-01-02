@@ -249,10 +249,68 @@ async function deleteAccount(userId) {
     }
 }
 
+async function recomendedSearches(search, friends, userId) {
+    await connectDB();
+    const db = client.db();
+    if (!db) {
+        throw new Error('Failed to connect to the database');
+    }
+    try {
+        const users = await db.collection('users').find({ userName: { $regex: search, $options: 'i' } }).toArray();
+        users.sort((a, b) => {
+            const aIndex = a.userName.toLowerCase().indexOf(search.toLowerCase());
+            const bIndex = b.userName.toLowerCase().indexOf(search.toLowerCase());
+            
+            if (aIndex !== bIndex) {
+                console.log("aIndex - bIndex", aIndex - bIndex);
+                return aIndex - bIndex;
+            }
+            console.log("new Date(a.joinedDate) - new Date(b.joinedDate)", new Date(a.joinedDate) - new Date(b.joinedDate));
+            return new Date(a.joinedDate) - new Date(b.joinedDate);
+        });
+        console.log('Users:', users);
+
+        if (friends.length === 0) {
+            return sanitizeUsers(users);
+        }
+
+        console.log("hello from recomendedSearches function");
+
+        let firstSuggestion;
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].friends.includes(userId)) {
+                firstSuggestion = users[i];
+                break;
+            }
+        }
+
+        if (firstSuggestion) {
+            const sortedUsers = users.filter(user => user._id !== firstSuggestion._id);
+            sortedUsers.unshift(firstSuggestion);
+            console.log('Sorted users:', sortedUsers);
+            return sanitizeUsers(sortedUsers.slice(0, 5));
+        }
+
+        return sanitizeUsers(users.slice(0, 5));
+    } catch (error) {
+        console.error('Failed to find users:', error);
+        throw error;
+    }
+}
+
+function sanitizeUsers(users) {
+    return users.map(user => ({
+        userName: user.userName,
+        profilePicture: user.profilePicture,
+        userId: user._id
+    }));
+}
+
 
 module.exports = {
     setProfilePicture,
     friendStatusLogic,
     visitProfile,
-    deleteAccount
+    deleteAccount,
+    recomendedSearches,
 };

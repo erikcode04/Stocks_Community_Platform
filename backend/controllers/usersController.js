@@ -130,4 +130,26 @@ exports.deleteAccount = async (req, res) => {
     }
 }
 
+exports.recomendedSearches = async (req, res) => {
+    console.log("req.body inside recomendedSearches controller", req.body);
+    const friends = req.body.friends;
+    const userId = req.body._id;
+    console.log("req.query inside recomendedSearches controller", req.query);
+    const search = req.query.search;
+    if (!search) {
+        return res.status(400).json({ message: "Search query is required" });
+    }
+    try {
+        const response = await usersService.recomendedSearches(search, friends, userId);
+        console.log("response inside recomendedSearches controller", response);
+        if (response) {
+            return res.json(response);
+        } else {
+            return res.status(500).json({ message: "Failed to fetch data" });
+        }
+    } catch (error) {
+        return res.status(500).json({ message: "Failed to fetch data" });
+    }
+}
+
 

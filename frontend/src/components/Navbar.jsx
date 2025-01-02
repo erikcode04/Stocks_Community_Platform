@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { CiSearch } from "react-icons/ci";
 import { FaBars } from "react-icons/fa"; 
+import axios from 'axios';
+import { AuthContext } from '../agils/checkAuth';
+import { profilePictures} from "../services/getProfilePictures";
+
 
 import "./componentStyles/navbar.css";
 import {handleLogout} from "../agils/logOut";
 function Navbar() {
+    const { userInfo } = useContext(AuthContext);
+    const [searchValue, setSearchValue] = useState('');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isSuggestionsVisible, setIsSuggestionsVisible] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
@@ -18,6 +26,37 @@ function Navbar() {
         } else {
             console.error('Failed to log out');
             return response;
+        }
+    }
+
+    async function recomendedSearches(event) {
+        setSearchValue(event.target.value);
+        console.log(searchValue);
+        console.log('authCOntext', userInfo);
+        try {
+            const response = await axios.post(`http://localhost:5000/users/recomendedSearches?search=${event.target.value}`, userInfo); 
+            if (response) {
+                console.log('response inside recomendedSearches controller', response);
+                setSuggestions(response.data);
+                if (event.target.value.length === 0) {
+                    console.log('no search value');
+                    setSuggestions([]);
+                    setIsSuggestionsVisible(false);
+                    return response;
+                }
+                setIsSuggestionsVisible(true);
+                return response;
+            } else {
+                setSuggestions([]);
+                setIsSuggestionsVisible(false);
+                return response;
+            }
+        }
+        catch (error) {
+            console.error('Failed to fetch data');
+            setSuggestions([]);
+            setIsSuggestionsVisible(false);
+            return error;
         }
     }
 
@@ -42,8 +81,18 @@ function Navbar() {
                     <a className='nav-listLink' href="/profilePage" >Profile </a>
                 </li>
                 <form id='nav-searchForm'>
-                    <input id='nav-searchInput' type="text" placeholder="Search.." name="search" />
+                    <input id='nav-searchInput' onChange={recomendedSearches} value={searchValue} type="text" placeholder="Search.." name="search" />
                     <button id='nav-searchButton' type="submit"><CiSearch /></button>
+                    {isSuggestionsVisible && (
+            <div id='search-suggestions' className='dropdown-content show'>
+            {suggestions.map((user, index) => (
+                <a key={index} href={`/user/${user.id}`}>  
+                 <img src={profilePictures.find(picture => picture.name === user.profilePicture)?.src} alt={`${user.userName}'s profile`} className='profile-picture' />
+                  {user.userName}
+                  </a>
+            ))}
+        </div>
+        )}
                 </form>
                 <div id='nav-rightSideWrapper'> 
                     <li className='nav-listItem dropdown'>
