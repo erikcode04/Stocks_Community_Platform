@@ -208,6 +208,37 @@ async function visitProfile(otherUserId, userInfo) {
 }
 
 
+
+async function visitProfileByUserName(otherUserName, userInfo) {
+    await connectDB();
+    console.log("otherUserId inside visitProfile function" , otherUserId);
+    const db = client.db();
+    if (!db) {
+        throw new Error('Failed to connect to the database');
+    }
+    try {
+        const user = await db.collection('users').findOne({ _id: new ObjectId(otherUserName) });
+        const posts = await db.collection('posts').find({ userId : user._id }).toArray();
+        console.log("posts inside visitProfile function", posts);
+        console.log("otherUserId inside visitProfile function", otherUserId);
+       let friendStatus = "Add Friend";
+       if (userInfo.userId !== otherUserId) {
+        user.friends.map(friend => { if (friend === userInfo.userId) {  friendStatus = "Friends" } });
+        user.sentFriendRequests.map(request => { if (request === userInfo.userId) { friendStatus = "Accept Friend Request" } });
+        user.friendRequests.map(request => { if (request === userInfo.userId) { friendStatus = "Request Sent"; } });
+       }    
+        const sanitizedUser = { _id: user._id, userName: user.userName, email: user.email, joinedDate: user.joinedDate, profilePicture: user.profilePicture,   };
+        console.log("sanitizedUser inside visitProfile function", sanitizedUser);
+        const sendBack = { user: sanitizedUser, posts };
+        console.log("sendBack inside visitProfile function", sendBack);
+        return {sendBack, friendStatus};
+    } catch (error) {
+        console.error('Error finding posts by user:', error);
+        throw error;
+    }
+}
+
+
 async function deleteAccount(userId) {
     await connectDB();
     const db = client.db();
@@ -274,16 +305,17 @@ async function recomendedSearches(search, friends, userId) {
             return sanitizeUsers(users);
         }
 
-        console.log("hello from recomendedSearches function");
+        console.log("hello from recomendedSearches function", userId);
 
         let firstSuggestion;
         for (let i = 0; i < users.length; i++) {
+            console.log("users[i].friends", users[i].friends);
             if (users[i].friends.includes(userId)) {
                 firstSuggestion = users[i];
                 break;
             }
         }
-
+         console.log("firstSuggestion", firstSuggestion);
         if (firstSuggestion) {
             const sortedUsers = users.filter(user => user._id !== firstSuggestion._id);
             sortedUsers.unshift(firstSuggestion);

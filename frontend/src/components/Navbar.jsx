@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { CiSearch } from "react-icons/ci";
 import { FaBars } from "react-icons/fa"; 
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../agils/checkAuth';
 import { profilePictures} from "../services/getProfilePictures";
 
@@ -60,6 +61,37 @@ function Navbar() {
         }
     }
 
+
+    async function handleSearch(event) {
+        event.preventDefault();
+        console.log('searchValue', searchValue);
+        try {
+            const response = await axios.post(`http://localhost:5000/users/search/?search=${searchValue}`, {withCredentials: true}); 
+            if (response) {
+                console.log('response inside visitProfileByUserName controller', response);
+                setSuggestions(response.data);
+                if (searchValue.length === 0) {
+                    console.log('no search value');
+                    setSuggestions([]);
+                    setIsSuggestionsVisible(false);
+                    return response;
+                }
+                setIsSuggestionsVisible(true);
+                return response;
+            } else {
+                setSuggestions([]);
+                setIsSuggestionsVisible(false);
+                return response;
+            }
+        }
+        catch (error) {
+            console.error('Failed to fetch data');
+            setSuggestions([]);
+            setIsSuggestionsVisible(false);
+            return error;
+        }
+    }
+
     return (
         <nav id='nav-container'>
             <div id='nav-logoContainer'>
@@ -80,16 +112,16 @@ function Navbar() {
                 <li className='nav-listItem'>
                     <a className='nav-listLink' href="/profilePage" >Profile </a>
                 </li>
-                <form id='nav-searchForm'>
-                    <input id='nav-searchInput' onChange={recomendedSearches} value={searchValue} type="text" placeholder="Search.." name="search" />
-                    <button id='nav-searchButton' type="submit"><CiSearch /></button>
+                <form id='nav-searchForm' onSubmit={handleSearch}>
+                    <input id='nav-searchInput' onChange={recomendedSearches} value={searchValue} type="text" placeholder="Search.." name="search" autocomplete="off" />
+                    <button id='nav-searchButton' type="submit"><CiSearch /></button> 
                     {isSuggestionsVisible && (
             <div id='search-suggestions' className='dropdown-content show'>
             {suggestions.map((user, index) => (
-                <a key={index} href={`/user/${user.id}`}>  
+                <Link key={index} to={`/visitProfilePage/${user.userId}`}>  
                  <img src={profilePictures.find(picture => picture.name === user.profilePicture)?.src} alt={`${user.userName}'s profile`} className='profile-picture' />
                   {user.userName}
-                  </a>
+                  </Link>
             ))}
         </div>
         )}

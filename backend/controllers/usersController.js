@@ -105,6 +105,41 @@ exports.visitProfile = async (req, res) => {
     }
 }
 
+exports.search = async (req, res) => {
+    console.log("hello we inside visitProfileByUserName controller");
+    console.log("req.body inside friendStatusLogic controller", req.cookies);
+    console.log("req.params inside friendStatusLogic controller", req.params);
+    const token = req.cookies.token;
+    if (!token) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+    console.log("token inside friendStatusLogic controller", token);
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log("decoded inside friendStatusLogic controller", decoded);
+        if (decoded) {
+           const userId = decoded.userId;
+            const otherUserId = req.params.userId;
+            const userInfo = decoded;
+            console.log("we did som variables", userId, otherUserId);
+            if (!userId) {
+                return res.status(400).json({ message: "Friend status and user info are required" });
+            }
+            const { sendBack, friendStatus }  = await usersService.visitProfile( otherUserId, userInfo);
+            console.log("sendBack inside friendStatusLogic controller", sendBack);
+            console.log("friendStatus inside friendStatusLogic controller", friendStatus);
+            if (sendBack) {
+                return res.json( {sendBack, friendStatus });
+            } else {
+                return res.status(500).json({ message: "Failed to update friend status" });
+            }
+        }
+    } catch (error) {
+        return res.status(401).json({ message: "Invalid token" });
+    }
+}
+
 exports.deleteAccount = async (req, res) => {
     const token = req.cookies.token;
     if (!token) {
@@ -133,7 +168,7 @@ exports.deleteAccount = async (req, res) => {
 exports.recomendedSearches = async (req, res) => {
     console.log("req.body inside recomendedSearches controller", req.body);
     const friends = req.body.friends;
-    const userId = req.body._id;
+    const userId = req.body.userId;
     console.log("req.query inside recomendedSearches controller", req.query);
     const search = req.query.search;
     if (!search) {

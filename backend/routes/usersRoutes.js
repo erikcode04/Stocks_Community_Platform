@@ -6,6 +6,7 @@ const router = express.Router();
 // Define routes and use the controller
 router.post('/setProfilePicture', usersController.setProfilePicture);
 router.post('/friendStatusLogic', usersController.friendStatusLogic);
+router.post('/search/:search', usersController.search);
 router.get('/visitProfile/:userId', usersController.visitProfile);
 router.delete('/deleteAccount', usersController.deleteAccount);
 router.post("/recomendedSearches", usersController.recomendedSearches);

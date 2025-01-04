@@ -67,7 +67,8 @@ const FeedPage = () => {
                             className="feed-postImage"
                             src={profilePictures.find(picture => picture.name === post.user.profilePicture)?.src}
                             alt="profile"
-                        />                        </div>
+                        />   
+                         </div>
                         <p className="feed-postCreatedDate" ><strong>Created:</strong> {new Date(post.created).toLocaleString()}</p>
                         <div>
                             <button className="feed-postButton"    onClick={() => {
