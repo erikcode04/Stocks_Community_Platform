@@ -82,6 +82,7 @@ const FeedPage = () => {
                     </div>
                 )) }
             </div>
+      
         </div>
     );
 };

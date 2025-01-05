@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useContext } from 'react';
+import React, { useEffect, useRef, useContext, useState } from 'react';
 import "../styles/homepage.css";
 import Navbar from "../components/Navbar";
 import coolDuck from "../assets/coolDuck.png";
@@ -7,11 +7,13 @@ import newsPaper from "../assets/newspaper.png";
 import topImage from "../assets/business.png";
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../agils/checkAuth';
+import FriendsButton from '../components/FriendsButton';
 
 function HomePage() {
 
   const { userInfo } = useContext(AuthContext);
   const boxesContainerRef = useRef(null);
+  const [showFriends, setShowFriends] = useState(true);
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -105,6 +107,7 @@ function HomePage() {
           </div>
         </div>
       </div>
+     <FriendsButton />
     </div>
   );
 }
