@@ -113,7 +113,7 @@ function Navbar() {
                     <a className='nav-listLink' href="/profilePage" >Profile </a>
                 </li>
                 <form id='nav-searchForm' onSubmit={handleSearch}>
-                    <input id='nav-searchInput' onChange={recomendedSearches} value={searchValue} type="text" placeholder="Search.." name="search" autocomplete="off" />
+                    <input id='nav-searchInput' onChange={recomendedSearches} value={searchValue} type="text" placeholder="Search.." name="search" autoComplete="off" />
                     <button id='nav-searchButton' type="submit"><CiSearch /></button> 
                     {isSuggestionsVisible && (
             <div id='search-suggestions' className='dropdown-content show'>

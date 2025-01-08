@@ -339,10 +339,36 @@ function sanitizeUsers(users) {
 }
 
 
+
+async function getFriendStatus(userId){
+    try {
+    await connectDB();
+    const db = client.db();
+     const user = await db.collection('users').findOne({ _id: new ObjectId(userId) });
+     const friends = await db.collection('users').find({ _id: { $in: user.friends.map(sentFriendRequest => new ObjectId(sentFriendRequest)) } }).toArray();
+     const friendRequests = await db.collection('users').find({ _id: { $in: user.friendRequests.map(sentFriendRequest => new ObjectId(sentFriendRequest)) } }).toArray();
+     const sentFriendRequests = await db.collection('users').find({ _id: { $in: user.sentFriendRequests.map(sentFriendRequest => new ObjectId(sentFriendRequest)) } }).toArray();
+
+     const sanaizedFriends = friends.map(friend => ({ userName: friend.userName, profilePicture: friend.profilePicture, userId: friend._id }));
+        const sanaizedFriendRequests = friendRequests.map(friend => ({ userName: friend.userName, profilePicture: friend.profilePicture, userId: friend._id }));
+        const sanaizedSentFriendRequests = sentFriendRequests.map(friend => ({ userName: friend.userName, profilePicture: friend.profilePicture, userId: friend._id }));
+ const sendBack = {friends: sanaizedFriends, friendRequests: sanaizedFriendRequests, sentFriendRequests: sanaizedSentFriendRequests};
+     console.log(sendBack)
+     return sendBack;
+    }
+    catch (error) {
+        console.error('Failed to find users:', error);
+        throw error;
+    }
+}
+
+
+
 module.exports = {
     setProfilePicture,
     friendStatusLogic,
     visitProfile,
     deleteAccount,
     recomendedSearches,
+    getFriendStatus,
 };

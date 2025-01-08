@@ -10,5 +10,7 @@ router.post('/search/:search', usersController.search);
 router.get('/visitProfile/:userId', usersController.visitProfile);
 router.delete('/deleteAccount', usersController.deleteAccount);
 router.post("/recomendedSearches", usersController.recomendedSearches);
+router.get('/getFriendStatus', usersController.getFriendStatus);
+
 
 module.exports = router;
