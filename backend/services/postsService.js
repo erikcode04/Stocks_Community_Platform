@@ -1,5 +1,8 @@
 const { connectDB, client } = require('../config/db'); // Adjust the path if necessary
 const { ObjectId } = require('mongodb');
+const axios = require('axios');
+require('dotenv').config({ path: './.env.local' });
+
 
 async function post( subject, userId ,title, textAreaContent) {
     console.log('post function inside postsService');
@@ -119,7 +122,53 @@ async function deletePost(post) {
     }
 }
 
-
+async function uploadStockList(stockList, userId) {
+    const stockPricesApiKey = process.env.STOCKPRICES_API_KEY;
+    console.log('uploadStockList function inside postsService with my api', stockPricesApiKey);
+    let stockListArray = [];
+    Object.entries(stockList).forEach(([key, value]) => {
+        console.log(`${key}: ${value}`);
+        if (value.length !== 0) {
+            const stock = { symbol: value};
+            stockListArray.push(stock);
+        }
+      });
+   let stockArray = [];
+      for (let index = 0; index < stockListArray.length; index++) {
+        const element = stockListArray[index];
+        console.log('element', element.symbol);
+        try {
+            const response = await axios.get(`https://api.twelvedata.com/price?symbol=${element.symbol}&apikey=${stockPricesApiKey}`);
+            console.log('response', response.data);
+            console.log('response price', response.data.price);
+            if (response.data.price) {
+                console.log("checking if I get here");
+                const stock = { symbol: element.symbol, price: response.data.price };
+                stockArray.push(stock);
+            }
+         } catch (error) {
+            console.error('Error getting stock price:', error);
+            throw error;
+        }
+      }
+    console.log('stockArray', stockArray);
+    console.log('stockListArray', stockListArray);
+    await connectDB();
+    const db = client.db();
+    if (!db) {
+        throw new Error('Failed to connect to the database');
+    }
+    try {
+        const date = new Date();
+        const todayDate = date.toLocaleString();
+     const result = await db.collection('stockLists').insertOne({ userId, todayDate, stockArray });
+        console.log('Stock list uploaded:', result);
+        return result;
+    } catch (error) {
+        console.error('Error uploading stock list:', error);
+        throw error;
+    }
+}
 
 
 module.exports = {
@@ -129,4 +178,5 @@ module.exports = {
     unlikePost,
     getPostsByUserId,
     deletePost,
+    uploadStockList
 };

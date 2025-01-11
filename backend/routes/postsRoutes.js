@@ -10,4 +10,5 @@ router.post('/likePost', postsController.likePost);
 router.post('/unlikePost', postsController.unlikePost);
 router.get('/getPostsByUserId', postsController.getPostsByUserId);
 router.delete('/deletePost', postsController.deletePost);
+router.post("/uploadStockList", postsController.uploadStockList);
 module.exports = router;

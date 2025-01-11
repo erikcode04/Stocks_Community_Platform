@@ -51,7 +51,7 @@ const FeedPage = () => {
             <Navbar />
             <div id="feed-contentContainer">
                 <h1>Feed</h1>
-                {userInfo.userId && <Link to="/createPost">Create Post</Link>}
+                {userInfo.userId && <Link to="/post">Create Post</Link>}
                 
                 { userInfo && posts.map(post => (
                     <div key={post._id} className="feed-postContainer">

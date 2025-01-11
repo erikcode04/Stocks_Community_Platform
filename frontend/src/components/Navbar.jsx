@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { CiSearch } from "react-icons/ci";
 import { FaBars } from "react-icons/fa"; 
 import axios from 'axios';
@@ -7,9 +8,11 @@ import { AuthContext } from '../agils/checkAuth';
 import { profilePictures} from "../services/getProfilePictures";
 
 
+
 import "./componentStyles/navbar.css";
 import {handleLogout} from "../agils/logOut";
 function Navbar() {
+   const navigate = useNavigate();
     const { userInfo } = useContext(AuthContext);
     const [searchValue, setSearchValue] = useState('');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -61,36 +64,13 @@ function Navbar() {
         }
     }
 
-
-    async function handleSearch(event) {
+    function search(event) {
         event.preventDefault();
         console.log('searchValue', searchValue);
-        try {
-            const response = await axios.post(`http://localhost:5000/users/search/?search=${searchValue}`, {withCredentials: true}); 
-            if (response) {
-                console.log('response inside visitProfileByUserName controller', response);
-                setSuggestions(response.data);
-                if (searchValue.length === 0) {
-                    console.log('no search value');
-                    setSuggestions([]);
-                    setIsSuggestionsVisible(false);
-                    return response;
-                }
-                setIsSuggestionsVisible(true);
-                return response;
-            } else {
-                setSuggestions([]);
-                setIsSuggestionsVisible(false);
-                return response;
-            }
-        }
-        catch (error) {
-            console.error('Failed to fetch data');
-            setSuggestions([]);
-            setIsSuggestionsVisible(false);
-            return error;
-        }
+        navigate(`/searchSuggestions/${searchValue}`);
     }
+
+ 
 
     return (
         <nav id='nav-container'>
@@ -112,7 +92,7 @@ function Navbar() {
                 <li className='nav-listItem'>
                     <a className='nav-listLink' href="/profilePage" >Profile </a>
                 </li>
-                <form id='nav-searchForm' onSubmit={handleSearch}>
+                <form id='nav-searchForm' onSubmit={search}>
                     <input id='nav-searchInput' onChange={recomendedSearches} value={searchValue} type="text" placeholder="Search.." name="search" autoComplete="off" />
                     <button id='nav-searchButton' type="submit"><CiSearch /></button> 
                     {isSuggestionsVisible && (

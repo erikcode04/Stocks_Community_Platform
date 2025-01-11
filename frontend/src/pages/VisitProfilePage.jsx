@@ -9,6 +9,7 @@ import axios from 'axios';
 
 
 
+
 function VisitProfilePage() {
 const { userInfo } = useContext(AuthContext);
 const [profilePicture, setProfilePicture] = useState(null);

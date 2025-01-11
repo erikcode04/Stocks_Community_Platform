@@ -73,6 +73,29 @@ exports.deletePost = async (req, res) => {
     }
 }
 
+exports.uploadStockList = async (req, res) => {
+    console.log("req.cookies", req.cookies);
+    const token = req.cookies.token;
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        if (decoded) {
+            console.log("decoded", decoded);
+        console.log("req.body", req.body);
+        const userId = decoded.userId;
+        const stockList = req.body;
+        
+        await postsService.uploadStockList(stockList, userId);
+        res.status(200).json({ message: "Stock list uploaded" });
+        }
+     else {
+        res.status(400).json({ message: "You are not authorized to upload a stock list" });
+    }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+
 
 
 

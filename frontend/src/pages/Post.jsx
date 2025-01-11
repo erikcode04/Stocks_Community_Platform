@@ -6,6 +6,7 @@ import "../styles/post.css";
 
 function Post() {
     const { userInfo } = useContext(AuthContext);
+    const [basicPost, setBasicPost] = useState(true);
   const [loading, setLoading] = useState(false);
   const [stateOfUpload, setStateOfUpload] = useState(false);
   const [post , setPost] = useState({
@@ -13,6 +14,23 @@ function Post() {
     title: "",
     textAreaContent: "",
     });
+
+    const [stockList, setStockList] = useState({
+   stockOne: "",
+    stockTwo: "",
+    stockThree: "",
+    stockFour: "",
+    stockFive: "",
+    });
+
+        const handleStockList = (event) => {
+            const { name, value } = event.target;
+            setStockList({
+                ...stockList,
+                [name]: value,
+            });
+            console.log(stockList);
+        }
 
 
         const handlePost = (event) => {
@@ -65,11 +83,34 @@ function Post() {
          .catch((error) => {
             console.error("error", error);
         });
-
     }
     catch (error) {
         console.error("error", error);
     }
+    }
+
+    async function uploadStockList(e) {
+        e.preventDefault();
+        console.log("stockList", stockList);
+        try {
+            const response = await axios.post("http://localhost:5000/posts/uploadStockList", stockList, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                withCredentials: true, // Ensure cookies are sent with the request
+            });
+    
+            console.log("response", response);
+            setStockList({
+                stockOne: "",
+                stockTwo: "",
+                stockThree: "",
+                stockFour: "",
+                stockFive: "",
+            });
+        } catch (error) {
+            console.error("error", error);
+        }
     }
 
 
@@ -81,7 +122,9 @@ function Post() {
         <Navbar />
         <div className="post-contentContainer">
         <h1>Post</h1>
-        <div id="post-postBox"> 
+        {basicPost ?(
+        <div id="post-postBox">
+            <button className="post-basicPostButton" onClick={() => setBasicPost(false)}>Create a post</button> 
             <h2>Post</h2>
             <form className="post-formForPost" onSubmit={submitPost}>
                 <div className="post-titleAreaContainer">
@@ -100,6 +143,28 @@ function Post() {
                 </button>
             </form>
         </div>
+) : (  
+    <div className="post-stockListContentContainer">
+    <button className="post-basicPostButton" onClick={() => setBasicPost(true)}>Back</button>
+    <h2>Stock List</h2>
+    <form className="post-formForStockList" onSubmit={uploadStockList}>
+        <div className="post-stockListContainer">
+            <label htmlFor="stockOne" className="post-stockLabel">Stock 1:</label>
+            <input value={stockList.stockOne} onChange={handleStockList} type="text" name="stockOne" className="post-stockInput"  />
+            <label htmlFor="stockTwo" className="post-stockLabel">Stock 2:</label>
+            <input value={stockList.stockTwo} onChange={handleStockList} type="text" name="stockTwo" className="post-stockInput"  />
+            <label htmlFor="stockThree" className="post-stockLabel">Stock 3:</label>
+            <input value={stockList.stockThree} onChange={handleStockList} type="text" name="stockThree" className="post-stockInput"  />
+            <label htmlFor="stockFour" className="post-stockLabel">Stock 4:</label>
+            <input value={stockList.stockFour} onChange={handleStockList} type="text" name="stockFour" className="post-stockInput"  />
+            <label htmlFor="stockFive" className="post-stockLabel">Stock 5:</label>
+            <input value={stockList.stockFive} onChange={handleStockList} type="text" name="stockFive" className="post-stockInput"  />
+        </div>
+        <button className="post-submitButton" type="submit">Submit</button>
+    </form>
+    </div>
+
+)} 
         </div>
         </div>
     );

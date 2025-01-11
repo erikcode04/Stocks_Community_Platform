@@ -68,6 +68,54 @@
     background-color: #0056b3;
 }
 
+.post-formForStockList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.post-stockListContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.post-stockLabel {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.post-stockInput {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.post-stockInput:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+.post-submitButton {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.post-submitButton:hover {
+    background-color: #0056b3;
+}
+
 @media (max-width: 768px) {
     #post-postBox {
         padding: 15px;

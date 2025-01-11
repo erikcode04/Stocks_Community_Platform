@@ -24,7 +24,6 @@ const FriendsWindow = () => {
             setFriends(response.data.friends);
             setFriendRequests(response.data.friendRequests);
             setSentFriendRequests(response.data.sentFriendRequests);
-            // Process and display the friends data as needed
         } catch (error) {
             console.error('Error fetching friends data:', error);
         }
