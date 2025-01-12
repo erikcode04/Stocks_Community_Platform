@@ -95,6 +95,9 @@ async function getPostsByUserId(userId) {
     }
     try {
         const posts = await db.collection('posts').find({ userId }).toArray();
+        const stockLists = await db.collection('stockLists').find({ userId }).toArray();
+        sendBack = {posts, stockLists};
+        console.log('senback:', sendBack);
         console.log('Posts:', posts);
         return posts;
     } catch (error) {
@@ -123,8 +126,8 @@ async function deletePost(post) {
 }
 
 async function uploadStockList(stockList, userId) {
+    console.log('uploadStockList function inside postsService');
     const stockPricesApiKey = process.env.STOCKPRICES_API_KEY;
-    console.log('uploadStockList function inside postsService with my api', stockPricesApiKey);
     let stockListArray = [];
     Object.entries(stockList).forEach(([key, value]) => {
         console.log(`${key}: ${value}`);
@@ -133,26 +136,39 @@ async function uploadStockList(stockList, userId) {
             stockListArray.push(stock);
         }
       });
+      console.log('stockListArraylength', stockListArray.length);
+      if (stockListArray.length === 0) {
+        throw new Error('No stock symbols found');
+      }
+      console.log('stockListArray', stockListArray);
    let stockArray = [];
+   let loserSendBack = [];
       for (let index = 0; index < stockListArray.length; index++) {
+        console.log('index', index);
         const element = stockListArray[index];
-        console.log('element', element.symbol);
+        console.log('element', element);
         try {
             const response = await axios.get(`https://api.twelvedata.com/price?symbol=${element.symbol}&apikey=${stockPricesApiKey}`);
-            console.log('response', response.data);
-            console.log('response price', response.data.price);
             if (response.data.price) {
-                console.log("checking if I get here");
+                console.log('Stock price:', response.data.price);
                 const stock = { symbol: element.symbol, price: response.data.price };
                 stockArray.push(stock);
             }
+            else {
+                const loser = element.symbol;
+                loserSendBack.push(loser);
+            }
+
          } catch (error) {
             console.error('Error getting stock price:', error);
             throw error;
         }
       }
-    console.log('stockArray', stockArray);
-    console.log('stockListArray', stockListArray);
+      console.log('stockArray', stockArray);
+     if (stockArray.length === 0) {
+        throw new Error('No stock prices found');
+    }
+      console.log('stockArray', stockArray);
     await connectDB();
     const db = client.db();
     if (!db) {
@@ -160,15 +176,20 @@ async function uploadStockList(stockList, userId) {
     }
     try {
         const date = new Date();
-        const todayDate = date.toLocaleString();
+      const todayDate = date.toLocaleString();
      const result = await db.collection('stockLists').insertOne({ userId, todayDate, stockArray });
         console.log('Stock list uploaded:', result);
-        return result;
+        return loserSendBack;
     } catch (error) {
         console.error('Error uploading stock list:', error);
         throw error;
     }
 }
+
+
+
+
+
 
 
 module.exports = {
