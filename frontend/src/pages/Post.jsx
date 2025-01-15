@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import Navbar from "../components/Navbar";
 import { AuthContext } from "../agils/checkAuth";
 import axios from "axios";
+import FriendsButton from "../components/FriendsButton";
 import "../styles/post.css";
 
 function Post() {
@@ -122,10 +123,15 @@ function Post() {
         <div>
             <Navbar />
             <div className="post-contentContainer">
-                <h1>Post</h1>
                 {basicPost ? (
                     <div id="post-postBox">
-                        <button className="post-basicPostButton" onClick={() => setBasicPost(false)}>Create a post</button>
+                        <button className="post-basicPostButton" onClick={() => setBasicPost(false)}>
+                        <span>Hover me</span>
+                      <svg width="15px" height="10px" viewBox="0 0 13 10">
+                    <path d="M1,5 L11,5"></path>
+                     <polyline points="8 1 12 5 8 9"></polyline>
+                    </svg>
+                        </button>
                         <h2>Post</h2>
                         <form className="post-formForPost" onSubmit={submitPost}>
                             <div className="post-titleAreaContainer">
@@ -146,9 +152,15 @@ function Post() {
                     </div>
                 ) : (
                     <div className="post-stockListContentContainer">
-                        <button className="post-basicPostButton" onClick={() => setBasicPost(true)}>Back</button>
-                        <h2>Stock List</h2>
                         <form className="post-formForStockList" onSubmit={uploadStockList}>
+                        <h2>Stock List</h2>
+                        <button className="post-basicPostButton" onClick={() => setBasicPost(true)}>
+                        <span>Hover me</span>
+                    <svg width="15px" height="10px" viewBox="0 0 13 10">
+                   <path d="M1,5 L11,5"></path>
+                  <polyline points="8 1 12 5 8 9"></polyline>
+                </svg>
+                        </button>
                             <div className="post-stockListContainer">
                                 <label htmlFor="stockOne" className="post-stockLabel">Stock 1:</label>
                                 <input value={stockList.stockOne} onChange={handleStockList} type="text" name="stockOne" className="post-stockInput" />
@@ -169,6 +181,7 @@ function Post() {
                     </div>
                 )}
             </div>
+            <FriendsButton />
         </div>
     );
 }

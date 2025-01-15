@@ -92,23 +92,16 @@ exports.uploadStockList = async (req, res) => {
     }
 }
 
-exports.getStockList = async (req, res) => {
-    const token = req.cookies.token;
+exports.getStocklists = async (req, res) => {
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        if (decoded) {
-        const userId = decoded.userId;
-        const stockList = await postsService.getStockList(userId);
+        console.log("req.params", req.params);
+       const startIndex = req.params.startIndex;
+        const stockList = await postsService.getStocklists(startIndex);
         res.status(200).json(stockList);
-        }
-     else {
-        res.status(400).json({ message: "You are not authorized to view this stock list" });
-    }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 }
-
 
 
 

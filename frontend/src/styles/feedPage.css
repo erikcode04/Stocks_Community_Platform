@@ -6,6 +6,72 @@
     margin-top: 20px;
 }
 
+.feedPage-header{
+    margin: 20px;
+}
+
+.feedPage-switch {
+    --input-focus: #2d8cf0;
+    --font-color: #323232;
+    --font-color-sub: #666;
+    --bg-color: #fff;
+    --bg-color-alt: #666;
+    --main-color: #323232;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    width: 50px;
+    height: 20px;
+    margin-bottom: 10px; 
+  }
+  
+  .feedPage-toggle {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .feedPage-slider {
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 2px solid var(--main-color);
+    box-shadow: 4px 4px var(--main-color);
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--bg-colorcolor);
+    transition: 0.3s;
+  }
+  
+  .feedPage-slider:before {
+    box-sizing: border-box;
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    border: 2px solid var(--main-color);
+    border-radius: 5px;
+    left: -2px;
+    bottom: 2px;
+    background-color: var(--bg-color);
+    box-shadow: 0 3px 0 var(--main-color);
+    transition: 0.3s;
+  }
+  
+  .feedPage-toggle:checked + .feedPage-slider {
+    background-color: var(--input-focus);
+  }
+  
+  .feedPage-toggle:checked + .feedPage-slider:before {
+    transform: translateX(30px);
+  }
+
 .feed-postContainer {
     width: 100%;
     max-width: 600px;
@@ -80,6 +146,124 @@
     border: 2px solid #ddd;
 }
 
+/* From Uiverse.io by andrew-demchenk0 */ 
+
+
+
+  /* From Uiverse.io by Yaseen549 */ 
+.feedPage-stockCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    height: 300px;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 30px;
+    background: #e0e0e0;
+    box-shadow: 15px 15px 30px #bebebe,
+               -15px -15px 30px #ffffff;
+   }
+   
+   .feedPage-stockList{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+   }
+
+
+   .feedPage-createPostButton{
+    position: fixed;
+    bottom: 10px; 
+    right: 10px; 
+    z-index: 1000;
+    background-color: #1E2749;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    width: 100px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;                 
+   }
+
+   .feedPage-createPostButton:hover {
+    background-color: #2d8cf0;
+   }
+
+
+  /* From Uiverse.io by JaydipPrajapati1910 */ 
+.loader {
+    width: 48px;
+    height: 48px;
+    margin: auto;
+    position: relative;
+  }
+  
+  .loader:before {
+    content: '';
+    width: 48px;
+    height: 5px;
+    background: #999;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    border-radius: 50%;
+    animation: shadow324 0.5s linear infinite;
+  }
+  
+  .loader:after {
+    content: '';
+    width: 100%;
+    height: 100%;
+    background: rgb(61, 106, 255);
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 4px;
+    animation: jump7456 0.5s linear infinite;
+  }
+  
+  @keyframes jump7456 {
+    15% {
+      border-bottom-right-radius: 3px;
+    }
+  
+    25% {
+      transform: translateY(9px) rotate(22.5deg);
+    }
+  
+    50% {
+      transform: translateY(18px) scale(1, .9) rotate(45deg);
+      border-bottom-right-radius: 40px;
+    }
+  
+    75% {
+      transform: translateY(9px) rotate(67.5deg);
+    }
+  
+    100% {
+      transform: translateY(0) rotate(90deg);
+    }
+  }
+  
+  @keyframes shadow324 {
+  
+    0%,
+      100% {
+      transform: scale(1, 1);
+    }
+  
+    50% {
+      transform: scale(1.2, 1);
+    }
+  }
 
 @media (max-width: 768px) {
     .feed-postContainer {

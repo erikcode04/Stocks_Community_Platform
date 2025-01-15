@@ -6,6 +6,7 @@ import ChooseImage from '../components/ChooseImage';
 import '../styles/profilePage.css';
 import axios from 'axios';
 import { handleLogout } from '../agils/logOut';
+import FriendsButton from '../components/FriendsButton';
 
 function ProfilePage() {
 const { userInfo } = useContext(AuthContext);
@@ -104,6 +105,7 @@ catch (error) {
             <button className='profilePage-deleteAccountButton' onClick={deleteAccount} > Delete Account </button>
         </div>
         </div>
+        <FriendsButton />
         </div>
     );
 }

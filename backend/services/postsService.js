@@ -176,12 +176,48 @@ async function uploadStockList(stockList, userId) {
     }
     try {
         const date = new Date();
-      const todayDate = date.toLocaleString();
-     const result = await db.collection('stockLists').insertOne({ userId, todayDate, stockArray });
+      const uploadDate = date.toLocaleString();
+     const result = await db.collection('stockLists').insertOne({ userId, uploadDate, stockArray });
         console.log('Stock list uploaded:', result);
         return loserSendBack;
     } catch (error) {
         console.error('Error uploading stock list:', error);
+        throw error;
+    }
+}
+
+async function getStocklists(startIndex) {
+    await connectDB();
+    const db = client.db();
+    if (!db) {
+        throw new Error('Failed to connect to the database');
+    }
+    try {
+        const latestDocuments = await db.collection("stockLists").find()
+        .sort({ uploadDate: -1 })
+        .skip(parseInt(startIndex))
+        .limit(50)
+        .toArray();
+         if (latestDocuments.length === 0) {
+            throw new Error('No stock lists found');
+         }
+        const userIds = latestDocuments.map(doc => doc.userId);
+        const objectIdArray = userIds.map(id => new ObjectId(id));
+        const users = await db.collection('users').find({ _id: { $in: objectIdArray } }).toArray();
+        const sanitizedUsers = users.map(user => {
+            const { hashedPassword, ...sanitizedUser } = user;
+            return sanitizedUser;
+        });
+        for (let doc of latestDocuments) {
+            const user = sanitizedUsers.find(user => user._id.toString() === doc.userId);
+            doc.user = user;
+        }
+
+        console.log('Latest documents:', latestDocuments);
+        return latestDocuments;
+    }
+    catch (error) {
+        console.error('Error finding latest documents:', error);
         throw error;
     }
 }
@@ -199,5 +235,6 @@ module.exports = {
     unlikePost,
     getPostsByUserId,
     deletePost,
-    uploadStockList
+    uploadStockList,
+    getStocklists
 };
