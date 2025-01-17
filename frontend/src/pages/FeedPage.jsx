@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import "../styles/feedPage.css";
@@ -6,15 +6,19 @@ import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { AuthContext } from "../agils/checkAuth";
 import { profilePictures } from "../services/getProfilePictures";
 import { Link } from "react-router-dom";
+import Loader from "../components/Loader";
+import Nodata from "../components/Nodata";
 
 const FeedPage = () => {
     const { userInfo } = useContext(AuthContext);
     const [posts, setPosts] = useState([]);
     const [feedMode, setFeedMode] = useState("Standard Posts");
     const [stockPosts, setStockPosts] = useState([]);
-    const [stockPostsStartIndex, setStockPostsStartIndex] = useState(0);
+    const stockPostsStartIndex = useRef(0);
     const [loading, setLoading] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
+    const [isTimerActive, setIsTimerActive] = useState(false);
+    const [nodata, setNodata] = useState(false);
 
     async function fetchPosts() {
         const response = await axios("http://localhost:5000/posts/getPosts");
@@ -43,15 +47,15 @@ const FeedPage = () => {
     }
 
     async function postsSwitch(event) {
-        setStockPostsStartIndex(0);
+        stockPostsStartIndex.current = 0;
         if (event.target.checked) {
             setFeedMode("Stock Posts");
             try {
-                const response = await axios(`http://localhost:5000/posts/getStockLists/${stockPostsStartIndex}`);
+                const response = await axios(`http://localhost:5000/posts/getStockLists/0`);
                 console.log("response", response);
-                setStockPostsStartIndex(stockPostsStartIndex + 50);
-                console.log("stockPostsStartIndex", stockPostsStartIndex);
                 setStockPosts(response.data);
+                stockPostsStartIndex.current = 50; 
+                console.log("stockPostsStartIndex", stockPostsStartIndex.current);
             } catch (error) {
                 console.error(error);
             }
@@ -76,7 +80,7 @@ const FeedPage = () => {
     }
 
     function handleScroll() {
-        if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight && !loading && !isFetching) {
+        if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight && !loading && !isFetching && !isTimerActive) {
             fetchMorePosts();
         }
     }
@@ -84,21 +88,32 @@ const FeedPage = () => {
     async function fetchMorePosts() {
         setLoading(true);
         setIsFetching(true);
+        setIsTimerActive(true);
+        const timer = new Promise(resolve => setTimeout(resolve, 5000));
         try {
-            const response = await axios(`http://localhost:5000/posts/getStockLists/${stockPostsStartIndex}`);
+            console.log("stockPostsStartIndex before", stockPostsStartIndex.current);
+            const currentStartIndex = stockPostsStartIndex.current; // Capture the current value
+            const response = await axios(`http://localhost:5000/posts/getStockLists/${currentStartIndex}`);
+            console.log("currentStartIndex", currentStartIndex);
+            console.log("stockPostsStartIndex", stockPostsStartIndex.current);
             console.log("response", response);
             if (response.data.length === 0) {
                 setLoading(false);
                 setIsFetching(false);
+                setIsTimerActive(false);
                 return;
             }
             setStockPosts(prevPosts => [...prevPosts, ...response.data]);
-            setStockPostsStartIndex(stockPostsStartIndex + 50);
+            stockPostsStartIndex.current += 50;
+            console.log("stockPostsStartIndex", stockPostsStartIndex.current);
         } catch (error) {
             console.error("Error fetching more posts.", error);
+            setNodata(true);
         } finally {
+            await timer;
             setLoading(false);
             setIsFetching(false);
+            setIsTimerActive(false);
         }
     }
 
@@ -107,8 +122,8 @@ const FeedPage = () => {
             <Navbar />
             <div id="feed-contentContainer">
                 <h1 className="feedPage-header">{feedMode}</h1>
-                <p> {stockPostsStartIndex}</p>
                 <label className="feedPage-switch">
+                    <Nodata/>
                     <input className="feedPage-toggle" type="checkbox" onClick={postsSwitch} />
                     <span className="feedPage-slider"></span>
                     <span className="feedPage-card-side"></span>
@@ -119,7 +134,7 @@ const FeedPage = () => {
                         <h3 className="feed-postTitle">{post.title}</h3>
                         <p className="feed-postTextContent">{post.textAreaContent}</p>
                         <p className="feed-postAuther"><strong>Author:</strong> {post.user.userName}</p>
-                        <Link key={post.user._id} to={`/visitProfilePage/${post.user._id}`}>to profile</Link>
+                        <Link key={post.user._id} to={`/visitProfilePage/${post.user._id}`} className="feedPage-visitProfileLink" >Visit Proifle</Link>
                         <div className="feed-profilePicture">
                             <img
                                 className="feed-postImage"
@@ -165,7 +180,8 @@ const FeedPage = () => {
                         <p className="feed-postCreatedDate"><strong>Created:</strong> {new Date(post.created).toLocaleString()}</p>
                     </div>
                 ))}
-                {loading && <div className="loader"></div>}
+                {loading && <Loader />}
+                
             </div>
             {userInfo.userId && <Link className="feedPage-createPostButton" to="/post">Upload Post</Link>}
         </div>
