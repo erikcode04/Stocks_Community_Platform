@@ -99,7 +99,7 @@ async function getPostsByUserId(userId) {
         sendBack = {posts, stockLists};
         console.log('senback:', sendBack);
         console.log('Posts:', posts);
-        return posts;
+        return sendBack;
     } catch (error) {
         console.error('Error finding posts:', error);
         throw error;
@@ -196,7 +196,7 @@ async function getStocklists(startIndex) {
         const latestDocuments = await db.collection("stockLists").find()
         .sort({ uploadDate: -1 })
         .skip(parseInt(startIndex))
-        .limit(50)
+        .limit(10)
         .toArray();
          if (latestDocuments.length === 0) {
             throw new Error('No stock lists found');

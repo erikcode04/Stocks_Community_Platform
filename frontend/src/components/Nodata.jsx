@@ -105,7 +105,7 @@ const Nodata = () => {
       ></path>
       <mask
         id="mask0_2_176"
-        style="mask-type:alpha"
+       mask-type="alpha"
         maskUnits="userSpaceOnUse"
         x="11"
         y="51"
@@ -125,7 +125,7 @@ const Nodata = () => {
       </g>
       <mask
         id="mask1_2_176"
-        style="mask-type:alpha"
+       mask-type="alpha"
         maskUnits="userSpaceOnUse"
         x="19"
         y="9"

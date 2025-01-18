@@ -18,7 +18,6 @@ const FeedPage = () => {
     const [loading, setLoading] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
     const [isTimerActive, setIsTimerActive] = useState(false);
-    const [nodata, setNodata] = useState(false);
 
     async function fetchPosts() {
         const response = await axios("http://localhost:5000/posts/getPosts");
@@ -54,7 +53,7 @@ const FeedPage = () => {
                 const response = await axios(`http://localhost:5000/posts/getStockLists/0`);
                 console.log("response", response);
                 setStockPosts(response.data);
-                stockPostsStartIndex.current = 50; 
+                stockPostsStartIndex.current = 10; 
                 console.log("stockPostsStartIndex", stockPostsStartIndex.current);
             } catch (error) {
                 console.error(error);
@@ -104,11 +103,10 @@ const FeedPage = () => {
                 return;
             }
             setStockPosts(prevPosts => [...prevPosts, ...response.data]);
-            stockPostsStartIndex.current += 50;
+            stockPostsStartIndex.current += 10;
             console.log("stockPostsStartIndex", stockPostsStartIndex.current);
         } catch (error) {
             console.error("Error fetching more posts.", error);
-            setNodata(true);
         } finally {
             await timer;
             setLoading(false);
@@ -123,7 +121,6 @@ const FeedPage = () => {
             <div id="feed-contentContainer">
                 <h1 className="feedPage-header">{feedMode}</h1>
                 <label className="feedPage-switch">
-                    <Nodata/>
                     <input className="feedPage-toggle" type="checkbox" onClick={postsSwitch} />
                     <span className="feedPage-slider"></span>
                     <span className="feedPage-card-side"></span>
@@ -158,11 +155,11 @@ const FeedPage = () => {
                 ))}
                 {userInfo && feedMode === "Stock Posts" && stockPosts.map(post => (
                     <div key={post._id} className="feedPage-stockCard">
-                        <h3 className="feed-postSubject">{post.subject}</h3>
-                        <h3 className="feed-postTitle">{post.title}</h3>
-                        <p className="feed-postTextContent">{post.textAreaContent}</p>
-                        <p className="feed-postAuther"><strong>Author:</strong> {post.user.userName}</p>
-                        <div className="feed-profilePicture">
+                        <h3 className="feed-stockPostSubject">{post.subject}</h3>
+                        <h3 className="feed-stockPostTitle">{post.title}</h3>
+                        <p className="feed-stockPostTextContent">{post.textAreaContent}</p>
+                        <p className="feed-stockPostAuther"><strong>Author:</strong> {post.user.userName}</p>
+                        <div className="feed-stockPostprofilePicture">
                             <img
                                 className="feed-postImage"
                                 src={profilePictures.find(picture => picture.name === post.user.profilePicture)?.src}
@@ -177,7 +174,7 @@ const FeedPage = () => {
                                 </div>
                             ))}
                         </div>
-                        <p className="feed-postCreatedDate"><strong>Created:</strong> {new Date(post.created).toLocaleString()}</p>
+                        <p className="feed-postCreatedDate"><strong>Created:</strong> {new Date(post.uploadDate).toLocaleString()}</p>
                     </div>
                 ))}
                 {loading && <Loader />}

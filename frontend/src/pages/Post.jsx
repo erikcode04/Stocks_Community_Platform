@@ -126,7 +126,7 @@ function Post() {
                 {basicPost ? (
                     <div id="post-postBox">
                         <button className="post-basicPostButton" onClick={() => setBasicPost(false)}>
-                        <span>Hover me</span>
+                        <span>Create Stock List</span>
                       <svg width="15px" height="10px" viewBox="0 0 13 10">
                     <path d="M1,5 L11,5"></path>
                      <polyline points="8 1 12 5 8 9"></polyline>
@@ -155,7 +155,8 @@ function Post() {
                         <form className="post-formForStockList" onSubmit={uploadStockList}>
                         <h2>Stock List</h2>
                         <button className="post-basicPostButton" onClick={() => setBasicPost(true)}>
-                        <span>Hover me</span>
+                        <span> Create Post
+                        </span>
                     <svg width="15px" height="10px" viewBox="0 0 13 10">
                    <path d="M1,5 L11,5"></path>
                   <polyline points="8 1 12 5 8 9"></polyline>

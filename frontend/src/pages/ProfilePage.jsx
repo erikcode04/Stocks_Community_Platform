@@ -13,7 +13,8 @@ const { userInfo } = useContext(AuthContext);
 const [profilePicture, setProfilePicture] = useState(null);
 const [chooseImage, setChooseImage] = useState(false);
 const [posts, setPosts] = useState([]);
-
+const [stockPosts, setStockPosts] = useState([]); 
+const [normalPostsMode, setNormalPostsMode] = useState(true);
 
 useEffect(() => {
     console.log("heyyyy", userInfo);
@@ -32,12 +33,15 @@ useEffect(() => {
 , []);
 
 
+
+
 async function getUserPosts() {
     try {
         console.log("userInfo.userId", userInfo.userId);
         const response = await axios.get("http://localhost:5000/posts/getPostsByUserId", { params : { userId: userInfo.userId } });
         console.log("response", response);
-        setPosts(response.data);
+        setPosts(response.data.posts);
+        setStockPosts(response.data.stockLists);
     } catch (error) {
         console.error('Error getting posts:', error);
     }
@@ -72,6 +76,16 @@ catch (error) {
 }
 }
 
+function postsModeSwitch(event) {
+    console.log("event.target.checked", event.target.checked);
+    if (event.target.checked) {
+        setNormalPostsMode(false);
+    } else {
+        setNormalPostsMode(true);
+    }
+}
+
+
     return (
       <div> 
         <Navbar />
@@ -93,13 +107,31 @@ catch (error) {
             </div>
             <div className="profilePage-posts">
                 <h2>Posts</h2>
-                {posts.map(post => (
+                <div className='profilePage-switchContainer'>
+                <label className="feedPage-switch">
+                    <input className="feedPage-toggle" type="checkbox" onClick={postsModeSwitch} />
+                    <span className="feedPage-slider"></span>
+                    <span className="feedPage-card-side"></span>
+                </label>
+                </div>
+          {normalPostsMode ? <div>     {posts.map(post => (
                     <div key={post._id} className="profilePage-post">
                         <h3 className='profilePage-postTitle' >{post.title}</h3>
                         <p className='profilePage-postTextArea' >{post.textAreaContent}</p>
                         <button className='profilePage-deleteButton' onClick={() => deletePost(post)} > delete </button>
                     </div>
-                ))}
+                ))} </div> : <div> {stockPosts.map(post => (
+                    <div key={post._id} className="profilePage-post">
+                        <h3 className='profilePage-postTitle' >{post.title}</h3>
+                        <p className='profilePage-postTextArea' >{post.textAreaContent}</p>
+                        {post.stockArray.map(stock => (
+                        <div key={stock.symbol}>
+                            <p  className='profilePage-stockList' >{stock.symbol}</p>
+                            <p  className='profilePage-stockList' >{stock.price}</p>
+                              </div>
+                        ))}
+                    </div>
+                ))} </div> }
         </div>
         <div className='profilePage-deleteAccountContainer'> 
             <button className='profilePage-deleteAccountButton' onClick={deleteAccount} > Delete Account </button>

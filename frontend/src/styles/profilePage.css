@@ -87,6 +87,13 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.profilePage-switchContainer{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
 .profilePage-posts h2 {
     text-align: center;
     color: #333;
