@@ -2,8 +2,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     margin-top: 20px;
     padding: 0 20px; /* Add padding for smaller screens */
+    min-height: 90vh;
 }
 
 #post-postBox {

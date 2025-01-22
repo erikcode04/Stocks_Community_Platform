@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useContext, useState } from 'react';
 import "../styles/homepage.css";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import coolDuck from "../assets/coolDuck.png";
 import magnet from "../assets/magnet.png";
 import newsPaper from "../assets/newspaper.png";
@@ -108,6 +109,7 @@ function HomePage() {
         </div>
       </div>
      <FriendsButton />
+      <Footer />
     </div>
   );
 }

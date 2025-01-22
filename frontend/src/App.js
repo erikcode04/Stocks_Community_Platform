@@ -10,6 +10,7 @@ import Post from './pages/Post';
 import FeedPage from './pages/FeedPage';
 import VisitProfilePage from './pages/VisitProfilePage';
 import SearchSuggestions from './pages/SearchSuggestions';
+import AboutPage from './pages/AboutPage';
 
 function App() {
 
@@ -33,6 +34,7 @@ if (!isLoggedIn) {
         <Route path="feed" element={isLoggedIn ? <FeedPage/> : <LoginPage/>} />
         <Route path="visitProfilePage/:userId" element={isLoggedIn ? <VisitProfilePage/> : <LoginPage/>} />
         <Route path="searchSuggestions/:searchValue" element={isLoggedIn ? <SearchSuggestions/> : <LoginPage/>} />
+        <Route path="about" element={isLoggedIn ? <AboutPage/> : <LoginPage/>}/>
       </Routes>
     </Router>
   );

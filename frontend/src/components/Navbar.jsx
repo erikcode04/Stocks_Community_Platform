@@ -84,7 +84,7 @@ function Navbar() {
             </div>
             <ul id='nav-list' className={isMobileMenuOpen ? 'active' : ''}>
                 <li className='nav-listItem'>
-                    <a className='nav-listLink' href="/" >About </a>
+                    <a className='nav-listLink' href="/about" >About </a>
                 </li>
                 <li className='nav-listItem'>
                     <a className='nav-listLink' href="/about" >Contact </a>

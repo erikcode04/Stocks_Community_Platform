@@ -1,12 +1,14 @@
 import { useContext, React, useState, useEffect } from 'react';
 import { AuthContext } from '../agils/checkAuth';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import { profilePictures } from '../services/getProfilePictures';
 import ChooseImage from '../components/ChooseImage';
 import '../styles/profilePage.css';
 import axios from 'axios';
 import { handleLogout } from '../agils/logOut';
 import FriendsButton from '../components/FriendsButton';
+
 
 function ProfilePage() {
 const { userInfo } = useContext(AuthContext);
@@ -138,6 +140,7 @@ function postsModeSwitch(event) {
         </div>
         </div>
         <FriendsButton />
+        <Footer />
         </div>
     );
 }

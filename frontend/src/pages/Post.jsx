@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { AuthContext } from "../agils/checkAuth";
 import axios from "axios";
 import FriendsButton from "../components/FriendsButton";
@@ -183,6 +184,7 @@ function Post() {
                 )}
             </div>
             <FriendsButton />
+            <Footer />
         </div>
     );
 }
