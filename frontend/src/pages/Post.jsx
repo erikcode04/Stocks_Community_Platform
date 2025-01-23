@@ -154,7 +154,6 @@ function Post() {
                 ) : (
                     <div className="post-stockListContentContainer">
                         <form className="post-formForStockList" onSubmit={uploadStockList}>
-                        <h2>Stock List</h2>
                         <button className="post-basicPostButton" onClick={() => setBasicPost(true)}>
                         <span> Create Post
                         </span>
@@ -163,6 +162,7 @@ function Post() {
                   <polyline points="8 1 12 5 8 9"></polyline>
                 </svg>
                         </button>
+                        <h2>Stock List</h2>
                             <div className="post-stockListContainer">
                                 <label htmlFor="stockOne" className="post-stockLabel">Stock 1:</label>
                                 <input value={stockList.stockOne} onChange={handleStockList} type="text" name="stockOne" className="post-stockInput" />

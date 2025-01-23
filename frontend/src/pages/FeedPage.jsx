@@ -7,7 +7,7 @@ import { AuthContext } from "../agils/checkAuth";
 import { profilePictures } from "../services/getProfilePictures";
 import { Link } from "react-router-dom";
 import Loader from "../components/Loader";
-import Nodata from "../components/Nodata";
+
 
 const FeedPage = () => {
     const { userInfo } = useContext(AuthContext);
@@ -15,13 +15,16 @@ const FeedPage = () => {
     const [feedMode, setFeedMode] = useState("Standard Posts");
     const [stockPosts, setStockPosts] = useState([]);
     const stockPostsStartIndex = useRef(0);
+    const normalPostsStartIndex = useRef(0);
+    let feedModeSwitch = useRef("normal");
     const [loading, setLoading] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
     const [isTimerActive, setIsTimerActive] = useState(false);
 
     async function fetchPosts() {
-        const response = await axios("http://localhost:5000/posts/getPosts");
+        const response = await axios("http://localhost:5000/posts/getPosts/0");
         const data = await response.data;
+        normalPostsStartIndex.current = 10;
         setPosts(data.reverse());
     }
 
@@ -46,9 +49,11 @@ const FeedPage = () => {
     }
 
     async function postsSwitch(event) {
+        console.log("event", event.target.checked);
         stockPostsStartIndex.current = 0;
         if (event.target.checked) {
             setFeedMode("Stock Posts");
+            feedModeSwitch.current = "stocks";
             try {
                 const response = await axios(`http://localhost:5000/posts/getStockLists/0`);
                 console.log("response", response);
@@ -60,6 +65,11 @@ const FeedPage = () => {
             }
         } else {
             setFeedMode("Standard Posts");
+        }
+        if (event.target.checked === false) {
+            feedModeSwitch.current = "normal";
+            console.log("unchecked");
+          
         }
     }
 
@@ -79,8 +89,13 @@ const FeedPage = () => {
     }
 
     function handleScroll() {
-        if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight && !loading && !isFetching && !isTimerActive) {
+        if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight && !loading && !isFetching && !isTimerActive &&  feedModeSwitch.current === "stocks") {
+            console.log("about to fetch stock posts");
             fetchMorePosts();
+        }
+        if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight && !loading && !isFetching && !isTimerActive &&  feedModeSwitch.current === "normal") {
+            console.log("about to fetch normal posts");
+            fetchMoreNormalPosts();
         }
     }
 
@@ -105,6 +120,34 @@ const FeedPage = () => {
             setStockPosts(prevPosts => [...prevPosts, ...response.data]);
             stockPostsStartIndex.current += 10;
             console.log("stockPostsStartIndex", stockPostsStartIndex.current);
+        } catch (error) {
+            console.error("Error fetching more posts.", error);
+        } finally {
+            await timer;
+            setLoading(false);
+            setIsFetching(false);
+            setIsTimerActive(false);
+        }
+    }
+
+    async function fetchMoreNormalPosts() {
+        setLoading(true);
+        setIsFetching(true);
+        setIsTimerActive(true);
+        const timer = new Promise(resolve => setTimeout(resolve, 5000));
+        try {
+            console.log("normalPostsStartIndex before", normalPostsStartIndex.current);
+            const currentStartIndex = normalPostsStartIndex.current;
+            const response = await axios(`http://localhost:5000/posts/getPosts/${currentStartIndex}`);
+            if (response.data.length === 0) {
+                setLoading(false);
+                setIsFetching(false);
+                setIsTimerActive(false);
+                return;
+            }
+            setPosts(prevPosts => [...prevPosts, ...response.data]);
+            normalPostsStartIndex.current += 10;
+            console.log("stockPostsStartIndex", normalPostsStartIndex.current);
         } catch (error) {
             console.error("Error fetching more posts.", error);
         } finally {

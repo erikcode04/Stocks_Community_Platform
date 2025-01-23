@@ -1,12 +1,12 @@
 
 .card-client {
-    background: #2cb5a0;
+    background: #1E2749;
     width: 13rem;
     padding-top: 25px;
     padding-bottom: 25px;
     padding-left: 20px;
     padding-right: 20px;
-    border: 4px solid #7cdacc;
+    border: 4px solid #273469;
     box-shadow: 0 6px 10px rgba(207, 212, 222, 1);
     border-radius: 10px;
     text-align: center;
@@ -24,7 +24,7 @@
     object-fit: cover;
     width: 5rem;
     height: 5rem;
-    border: 4px solid #7cdacc;
+    border: 4px solid #273469;
     border-radius: 999px;
     display: flex;
     justify-content: center;
@@ -56,7 +56,7 @@
     width: 100%;
     height: 2px;
     margin: 20px 0;
-    background: #7cdacc;
+    background: #273469;
   }
   
   .social-media a {

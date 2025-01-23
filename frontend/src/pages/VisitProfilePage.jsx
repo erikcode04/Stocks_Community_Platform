@@ -6,6 +6,9 @@ import ChooseImage from '../components/ChooseImage';
 import '../styles/profilePage.css';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import { IoIosAddCircleOutline } from "react-icons/io";
+import { IoArrowUndoOutline } from "react-icons/io5";
+
 
 
 
@@ -79,7 +82,9 @@ useEffect(() => {
                         </>
                     )}
             </div>
-{userId !== userInfo.userId &&    <button className="profilePage-addFriendButton" onClick={FriendStatusHandler} > {friendStatus} </button>
+{userId !== userInfo.userId &&    <button className="profilePage-addFriendButton" onClick={FriendStatusHandler} > {friendStatus} 
+{friendStatus === "Add Friend" ? <IoIosAddCircleOutline size={16} /> : <IoArrowUndoOutline size={15}/>
+} </button>
 }            <div className="profilePage-posts">
                 <h2>Posts</h2>
                 {posts.map(post => (

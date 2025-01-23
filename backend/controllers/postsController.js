@@ -17,7 +17,9 @@ exports.post = async (req, res) => {
 
 exports.getPosts = async (req, res) => {
     try {
-        const posts = await postsService.getPosts();
+        const startIndex = req.params.startIndex;
+        console.log("startIndex inside regularposts giver", startIndex);
+        const posts = await postsService.getPosts(startIndex);
         res.status(200).json(posts);
     } catch (error) {
         res.status(400).json({ message: error.message });

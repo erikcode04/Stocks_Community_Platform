@@ -83,15 +83,16 @@ function Navbar() {
                 <FaBars />
             </div>
             <ul id='nav-list' className={isMobileMenuOpen ? 'active' : ''}>
-                <li className='nav-listItem'>
-                    <a className='nav-listLink' href="/about" >About </a>
-                </li>
-                <li className='nav-listItem'>
-                    <a className='nav-listLink' href="/about" >Contact </a>
+            <li className='nav-listItem'>
+                    <a className='nav-listLink' href="/feed" > Posts </a>
                 </li>
                 <li className='nav-listItem'>
                     <a className='nav-listLink' href="/profilePage" >Profile </a>
                 </li>
+                <li className='nav-listItem'>
+                    <a className='nav-listLink' href="/about" >About </a>
+                </li>
+               
                 <form id='nav-searchForm' onSubmit={search}>
                     <input id='nav-searchInput' onChange={recomendedSearches} value={searchValue} type="text" placeholder="Search.." name="search" autoComplete="off" />
                     <button id='nav-searchButton' type="submit"><CiSearch /></button> 

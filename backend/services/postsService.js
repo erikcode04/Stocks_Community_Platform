@@ -23,15 +23,24 @@ async function post( subject, userId ,title, textAreaContent) {
 
 }
 
-async function getPosts() {
+async function getPosts(startIndex) {
     await connectDB();
     const db = client.db();
     if (!db) {
         throw new Error('Failed to connect to the database');
     }
     try {
-       const prepPosts = await db.collection('posts').find().toArray();
-       const userIds = prepPosts.map(post => post.userId);
+        console.log('startIndex inside getPosts', startIndex);
+        const latestDocuments = await db.collection("posts").find()
+        .sort({ uploadDate: -1 })
+        .skip(parseInt(startIndex))
+        .limit(10)
+        .toArray();
+        if (latestDocuments.length === 0) {
+            throw new Error('No posts found');
+        }
+        console.log('latestDocuments', latestDocuments);
+       const userIds = latestDocuments.map(post => post.userId);
        const objectIdArray = userIds.map(id => new ObjectId(id));
        const users = await db.collection('users').find({ _id: { $in: objectIdArray } }).toArray(); 
        const sanitizedUsers = users.map(user => {
@@ -39,7 +48,7 @@ async function getPosts() {
         return sanitizedUser;
     });
         let posts = [];
-     for (let post of prepPosts) {
+     for (let post of  latestDocuments) {
             const user = sanitizedUsers.find(user => user._id.toString() === post.userId);
             post.user = user;
             posts.push(post);
