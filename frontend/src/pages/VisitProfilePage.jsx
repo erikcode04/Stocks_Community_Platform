@@ -87,12 +87,13 @@ useEffect(() => {
 } </button>
 }            <div className="profilePage-posts">
                 <h2>Posts</h2>
-                {posts.map(post => (
+                {posts.slice(0, 10).map(post => (
                     <div key={post._id} className="profilePage-post">
                         <h3 className='profilePage-postTitle' >{post.title}</h3>
                         <p className='profilePage-postTextArea' >{post.textAreaContent}</p>
                     </div>
                 ))}
+                <div className='profilePage-Change'> </div>
         </div>
         </div>
         </div>

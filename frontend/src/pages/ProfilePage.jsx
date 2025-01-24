@@ -116,13 +116,19 @@ function postsModeSwitch(event) {
                     <span className="feedPage-card-side"></span>
                 </label>
                 </div>
-          {normalPostsMode ? <div>     {posts.map(post => (
+          {normalPostsMode ? <div>     {posts.slice(0,5).map(post => (
                     <div key={post._id} className="profilePage-post">
                         <h3 className='profilePage-postTitle' >{post.title}</h3>
                         <p className='profilePage-postTextArea' >{post.textAreaContent}</p>
                         <button className='profilePage-deleteButton' onClick={() => deletePost(post)} > delete </button>
                     </div>
-                ))} </div> : <div> {stockPosts.map(post => (
+
+                ))} <div className='profilePage-changePageContainer'>
+                       <button className='profilePage-goTodNextPage' > Load More </button>
+                <button className='profilePage-goToBeforePage' > Load More </button>
+                     </div>
+                 </div> 
+                : <div> {stockPosts.slice(0,10).map(post => (
                     <div key={post._id} className="profilePage-post">
                         <h3 className='profilePage-postTitle' >{post.title}</h3>
                         <p className='profilePage-postTextArea' >{post.textAreaContent}</p>
@@ -133,7 +139,12 @@ function postsModeSwitch(event) {
                               </div>
                         ))}
                     </div>
-                ))} </div> }
+                ))} 
+                <div className='profilePage-changePageContainer'>
+                       <button className='profilePage-goTodNextPage' > Load More </button>
+                <button className='profilePage-goToBeforePage' > Load More </button>
+                     </div>
+                 </div> }
         </div>
         <div className='profilePage-deleteAccountContainer'> 
             <button className='profilePage-deleteAccountButton' onClick={deleteAccount} > Delete Account </button>
