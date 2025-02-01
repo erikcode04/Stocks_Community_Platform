@@ -59,6 +59,17 @@ exports.getPostsByUserId = async (req, res) => {
     }
 }
 
+exports.getMorePostsByUserId = async (req, res) => {
+    try {
+        console.log("req.query", req.query);
+        const { userId, startIndex } = req.query;
+        const posts = await postsService.getMorePostsByUserId(userId, startIndex);
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 exports.deletePost = async (req, res) => {
     const token = req.cookies.token;
     try {

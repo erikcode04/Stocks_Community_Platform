@@ -250,6 +250,7 @@ async function deleteAccount(userId) {
         console.log('Deleting account...');
         const result = await usersCollection.deleteOne({ _id : new ObjectId(userId)});
         if (result.deletedCount === 1) {
+            await db.collection('stockLists').deleteMany({ userId: userId });   
             await db.collection('posts').deleteMany({ userId: userId });   
          const resultFromDelFriends = await usersCollection.updateMany(
                 { friends: userId },

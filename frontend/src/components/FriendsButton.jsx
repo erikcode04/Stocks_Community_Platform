@@ -20,7 +20,6 @@ const FriendsWindow = () => {
         async function fetchData() {
          try {
             const response = await axios.get('http://localhost:5000/users/getFriendStatus', {withCredentials: true});
-            console.log('Friends data:', response.data);
             setFriends(response.data.friends);
             setFriendRequests(response.data.friendRequests);
             setSentFriendRequests(response.data.sentFriendRequests);

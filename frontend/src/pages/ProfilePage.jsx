@@ -1,4 +1,4 @@
-import { useContext, React, useState, useEffect } from 'react';
+import { useContext, React, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../agils/checkAuth';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -7,7 +7,13 @@ import ChooseImage from '../components/ChooseImage';
 import '../styles/profilePage.css';
 import axios from 'axios';
 import { handleLogout } from '../agils/logOut';
+import { FaArrowRight } from "react-icons/fa6";
+import { FaArrowLeft } from "react-icons/fa6";
 import FriendsButton from '../components/FriendsButton';
+
+
+
+
 
 
 function ProfilePage() {
@@ -17,12 +23,21 @@ const [chooseImage, setChooseImage] = useState(false);
 const [posts, setPosts] = useState([]);
 const [stockPosts, setStockPosts] = useState([]); 
 const [normalPostsMode, setNormalPostsMode] = useState(true);
+const [stockPages, setStockPages] = useState(1);
+const [postsPages, setPostsPages] = useState(1);
+const [postCurrentPage, setPostCurrentPage] = useState(1);
+const [postStartIndex, setPostStartIndex] = useState(0);
+const [postEndIndex, setPostEndIndex] = useState(5);
+
+const postStartIndexRef = useRef(5);
+const postEndIndexRef = useRef(10);
+const scrolledPages = useRef(1);
+
+
 
 useEffect(() => {
-    console.log("heyyyy", userInfo);
     if (userInfo.profilePicture) {
         const foundImage = (profilePictures.find(picture => picture.name === userInfo.profilePicture));
-        console.log("foundImage", foundImage);
         setProfilePicture(foundImage.src);
        
     }
@@ -39,11 +54,12 @@ useEffect(() => {
 
 async function getUserPosts() {
     try {
-        console.log("userInfo.userId", userInfo.userId);
         const response = await axios.get("http://localhost:5000/posts/getPostsByUserId", { params : { userId: userInfo.userId } });
-        console.log("response", response);
+        console.log("start fetch", response);
         setPosts(response.data.posts);
         setStockPosts(response.data.stockLists);
+        setPostsPages(response.data.postCount);
+        setStockPages(response.data.stockListCount);
     } catch (error) {
         console.error('Error getting posts:', error);
     }
@@ -57,6 +73,12 @@ async function deletePost(post) {
     if (response.status === 200) {
         const newPosts = posts.filter(p => p._id !== post._id);
         setPosts(newPosts);
+        if (posts % 5 === 0) {
+            setPostStartIndex(postStartIndex - 5);
+            setPostEndIndex(postEndIndex - 5);
+            setPostCurrentPage(postCurrentPage - 1);
+            setPostsPages(postsPages - 1);
+        }
     }
     } catch (error) {
         console.error('Error deleting post:', error);
@@ -87,6 +109,45 @@ function postsModeSwitch(event) {
     }
 }
 
+async function nextPostPageHandler() {
+    if (postsPages > 1){
+        if (postCurrentPage === postsPages) {
+            return;
+        }
+            
+    if (postsPages > scrolledPages.current) {
+    try {
+        const response = await axios.get("http://localhost:5000/posts/getMorePostsByUserId", { params : { userId: userInfo.userId, startIndex: postStartIndexRef.current } });
+        setPosts([...posts, ...response.data]);
+            scrolledPages.current += 1;
+       setPostCurrentPage(postCurrentPage + 1);
+        postStartIndexRef.current += 5;
+        setPostStartIndex(postStartIndex + 5);
+        setPostEndIndex(postEndIndex + 5);
+        
+    } catch (error) {
+     console.error('Error getting more posts:', error);   
+    }
+}
+else {
+    setPostStartIndex(postStartIndex + 5);
+        setPostEndIndex(postEndIndex + 5);
+        setPostCurrentPage(postCurrentPage + 1);
+        scrolledPages.current += 1;
+        postStartIndexRef.current += 5;
+}
+}
+}
+
+function beforePagePostHandler() {
+if (postCurrentPage > 1) {
+    setPostCurrentPage(postCurrentPage - 1);
+    setPostStartIndex(postStartIndex - 5);
+    setPostEndIndex(postEndIndex - 5);
+}
+}
+
+
 
     return (
       <div> 
@@ -116,7 +177,7 @@ function postsModeSwitch(event) {
                     <span className="feedPage-card-side"></span>
                 </label>
                 </div>
-          {normalPostsMode ? <div>     {posts.slice(0,5).map(post => (
+          {normalPostsMode ? <div>     {posts.slice(postStartIndex, postEndIndex).map(post => (
                     <div key={post._id} className="profilePage-post">
                         <h3 className='profilePage-postTitle' >{post.title}</h3>
                         <p className='profilePage-postTextArea' >{post.textAreaContent}</p>
@@ -124,8 +185,11 @@ function postsModeSwitch(event) {
                     </div>
 
                 ))} <div className='profilePage-changePageContainer'>
-                       <button className='profilePage-goTodNextPage' > Load More </button>
-                <button className='profilePage-goToBeforePage' > Load More </button>
+                    <p className='profilePage-postsPageNumber'>  1 </p>
+                <button className='profilePage-switchPostsPageButton' onClick={beforePagePostHandler}  > <FaArrowLeft/> </button>
+                <p className='profilePage-postsPageNumber'> {postCurrentPage} </p>
+                <button className='profilePage-switchPostsPageButton'onClick={nextPostPageHandler} > <FaArrowRight/> </button>
+                <p className='profilePage-postsPageNumber'> {postsPages}</p>
                      </div>
                  </div> 
                 : <div> {stockPosts.slice(0,10).map(post => (

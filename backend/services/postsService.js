@@ -103,11 +103,35 @@ async function getPostsByUserId(userId) {
         throw new Error('Failed to connect to the database');
     }
     try {
-        const posts = await db.collection('posts').find({ userId }).toArray();
-        const stockLists = await db.collection('stockLists').find({ userId }).toArray();
-        sendBack = {posts, stockLists};
-        console.log('senback:', sendBack);
-        console.log('Posts:', posts);
+        const posts = await db.collection('posts').find({ userId }) 
+    .skip(0)
+    .limit(5)
+    .toArray();
+        const postsLength = await db.collection('posts').find({ userId }).count();
+        const stockLists = await db.collection('stockLists').find({ userId })
+        .skip(0)
+        .limit(5).toArray();
+        const stockListLength = await db.collection('stockLists').find({ userId }).count();
+        let stockListCount = stockListLength / 5;
+        let postCount = postsLength / 5;
+        let sendBack = {};
+        if (postCount === Math.floor(postCount) && postCount > 1) {
+            console.log('postCount is even', postCount);
+            postCount = postCount;
+            sendBack = {posts, stockLists, postCount, stockListCount};
+            return sendBack;
+        }
+        if (Math.floor(postCount) < postCount) {
+            console.log('postCount is odd', postCount);
+            postCount = Math.ceil(postCount);
+        }
+        if (postCount < 1) {
+            postCount = 1;
+        }
+        if (stockListCount < 1) {
+            stockListCount = 1;
+        }
+        sendBack = {posts, stockLists, postCount, stockListCount};
         return sendBack;
     } catch (error) {
         console.error('Error finding posts:', error);
@@ -115,6 +139,27 @@ async function getPostsByUserId(userId) {
     }
 }
 
+async function getMorePostsByUserId(userId, startIndex) {
+    await connectDB();
+    const db = client.db();
+    if (!db) {
+        throw new Error('Failed to connect to the database');
+    }
+    try {
+        console.log('startIndex inside getMorePostsByUserId', startIndex);
+        startIndex = parseInt(startIndex);
+        const posts = await db.collection('posts').find({ userId }) 
+        .skip(startIndex)
+        .limit(5) 
+        .toArray();
+        console.log('Posts:', posts);
+        console.log('Postslength:', posts.length);
+        return posts;
+    } catch (error) {
+        console.error('Error finding posts:', error);
+        throw error;
+    }
+}
 
 async function deletePost(post) {
     console.log('deletePost function inside postsService');
@@ -243,6 +288,7 @@ module.exports = {
     likePost,
     unlikePost,
     getPostsByUserId,
+    getMorePostsByUserId,
     deletePost,
     uploadStockList,
     getStocklists

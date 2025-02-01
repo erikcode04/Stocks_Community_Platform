@@ -10,11 +10,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.profilePage-changePageContainer{
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-}
+
 
 .profile-container h1 {
     font-size: 2em;
@@ -148,9 +144,35 @@
     color: #333;
 }
 
+.profilePage-changePageContainer{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
 .profilePage-postTextArea {
     font-size: 1em;
     color: #555;
+}
+
+.profilePage-postsPageNumber{
+    font-size: 1em;
+}
+
+.profilePage-switchPostsPageButton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    background-color: #273469;
+    color: #fff;
+    text-align: center;
+    border: bold 1px solid #E4D9FF;
+    border-radius: 15%;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 50px;
+    margin: 0 10px;
 }
 
 .profilePage-deleteButton {
@@ -171,6 +193,7 @@
     background-color: #c82333;
     transform: scale(1.05);
 }
+
 
 .profilePage-deleteAccountContainer {
     display: flex;
