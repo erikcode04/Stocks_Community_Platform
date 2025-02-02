@@ -13,4 +13,6 @@ router.delete('/deletePost', postsController.deletePost);
 router.post("/uploadStockList", postsController.uploadStockList);
 router.get('/getPosts/:startIndex', postsController.getPosts);
 router.get("/getStocklists/:startIndex", postsController.getStocklists);
+router.get("/countStockMentions", postsController.countStockMentions);
+
 module.exports = router;

@@ -103,11 +103,11 @@ async function getPostsByUserId(userId) {
         throw new Error('Failed to connect to the database');
     }
     try {
+        const postsLength = await db.collection('posts').find({ userId }).count();
         const posts = await db.collection('posts').find({ userId }) 
-    .skip(0)
+    .skip(postsLength - 5)
     .limit(5)
     .toArray();
-        const postsLength = await db.collection('posts').find({ userId }).count();
         const stockLists = await db.collection('stockLists').find({ userId })
         .skip(0)
         .limit(5).toArray();
@@ -118,7 +118,7 @@ async function getPostsByUserId(userId) {
         if (postCount === Math.floor(postCount) && postCount > 1) {
             console.log('postCount is even', postCount);
             postCount = postCount;
-            sendBack = {posts, stockLists, postCount, stockListCount};
+            sendBack = {posts, stockLists, postCount, stockListCount, postsLength};
             return sendBack;
         }
         if (Math.floor(postCount) < postCount) {
@@ -131,7 +131,7 @@ async function getPostsByUserId(userId) {
         if (stockListCount < 1) {
             stockListCount = 1;
         }
-        sendBack = {posts, stockLists, postCount, stockListCount};
+        sendBack = {posts, stockLists, postCount, stockListCount, postsLength};
         return sendBack;
     } catch (error) {
         console.error('Error finding posts:', error);
@@ -149,7 +149,7 @@ async function getMorePostsByUserId(userId, startIndex) {
         console.log('startIndex inside getMorePostsByUserId', startIndex);
         startIndex = parseInt(startIndex);
         const posts = await db.collection('posts').find({ userId }) 
-        .skip(startIndex)
+        .skip(startIndex - 5)
         .limit(5) 
         .toArray();
         console.log('Posts:', posts);
@@ -277,6 +277,28 @@ async function getStocklists(startIndex) {
 }
 
 
+async function countStockMentions(userId) {
+    await connectDB();
+    const db = client.db();
+    if (!db) {
+        throw new Error('Failed to connect to the database');
+    }
+    try {
+        const stockLists = await db.collection('stockLists').find({userId}).toArray();
+    const allSymbols = [];
+        stockLists.forEach(stockList => {
+            stockList.stockArray.forEach(stock => {
+                allSymbols.push(stock.symbol);
+            });
+        });
+        console.log('All symbols:', allSymbols);
+        return count;
+    } catch (error) {
+        console.error('Error counting stock mentions:', error);
+        throw error;
+    }
+}
+
 
 
 
@@ -291,5 +313,6 @@ module.exports = {
     getMorePostsByUserId,
     deletePost,
     uploadStockList,
-    getStocklists
+    getStocklists,
+    countStockMentions
 };

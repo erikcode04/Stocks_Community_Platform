@@ -1,4 +1,5 @@
 import { useContext, React, useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../agils/checkAuth';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -10,6 +11,7 @@ import { handleLogout } from '../agils/logOut';
 import { FaArrowRight } from "react-icons/fa6";
 import { FaArrowLeft } from "react-icons/fa6";
 import FriendsButton from '../components/FriendsButton';
+import Chart from "../components/Chart";
 
 
 
@@ -60,6 +62,8 @@ async function getUserPosts() {
         setStockPosts(response.data.stockLists);
         setPostsPages(response.data.postCount);
         setStockPages(response.data.stockListCount);
+        console.log("response.data", response.data);
+        postStartIndexRef.current = response.data.postsLength -5;  
     } catch (error) {
         console.error('Error getting posts:', error);
     }
@@ -121,7 +125,7 @@ async function nextPostPageHandler() {
         setPosts([...posts, ...response.data]);
             scrolledPages.current += 1;
        setPostCurrentPage(postCurrentPage + 1);
-        postStartIndexRef.current += 5;
+        postStartIndexRef.current -= 5;
         setPostStartIndex(postStartIndex + 5);
         setPostEndIndex(postEndIndex + 5);
         
@@ -147,6 +151,14 @@ if (postCurrentPage > 1) {
 }
 }
 
+const portfolio = [
+    { name: "Apple", quantity: 2 },
+    { name: "Google", quantity: 3 },
+    { name: "Facebook", quantity: 1 },
+    { name: "Amazon", quantity: 4 },
+    { name: "Microsoft", quantity: 5 },
+    ];
+
 
 
     return (
@@ -156,6 +168,7 @@ if (postCurrentPage > 1) {
             <h1>Profile</h1>
             <div className="profile-details">
             <div className="profilePage-chooseImageContainer">
+                <Chart portfolio={portfolio} />
             {chooseImage && <ChooseImage />}
             </div>
             <div className='profilePage-profilePictureContainer'>
@@ -168,6 +181,7 @@ if (postCurrentPage > 1) {
                 <p><strong>Email:</strong> {userInfo.email}</p>
                 <p><strong>Joined:</strong> {new Date(userInfo.joinedDate).toLocaleDateString()}</p>
             </div>
+            <Link to="/chartPage" className="profilePage-chartLink"> Go to Chart Page </Link>
             <div className="profilePage-posts">
                 <h2>Posts</h2>
                 <div className='profilePage-switchContainer'>
@@ -177,7 +191,7 @@ if (postCurrentPage > 1) {
                     <span className="feedPage-card-side"></span>
                 </label>
                 </div>
-          {normalPostsMode ? <div>     {posts.slice(postStartIndex, postEndIndex).map(post => (
+          {normalPostsMode ? <div>     {posts.slice(postStartIndex, postEndIndex).reverse().map(post => (
                     <div key={post._id} className="profilePage-post">
                         <h3 className='profilePage-postTitle' >{post.title}</h3>
                         <p className='profilePage-postTextArea' >{post.textAreaContent}</p>

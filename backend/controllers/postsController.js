@@ -116,6 +116,24 @@ exports.getStocklists = async (req, res) => {
     }
 }
 
+exports.countStockMentions = async (req, res) => {
+    try {
+        console.log("inside countStockMentions with cookies", req.cookies); 
+        const token = req.cookies.token;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log("decoded", decoded);
+        if (!decoded) {
+            res.status(400).json({ message: "You are not authorized to count stock mentions" });
+        }
+        const userId = decoded.userId;
+        const stockList = await postsService.countStockMentions(userId);
+        res.status(200).json(stockList);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+
 
 
 

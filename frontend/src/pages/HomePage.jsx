@@ -67,41 +67,7 @@ function HomePage() {
                   <Link to='/feed' id='homePage-linktoStocks'>Explore Stocks</Link>
                 </div>
                 <div className='homePage-photoHalfBox'>
-                  <img className='homePage-photo' src={coolDuck} alt="Cool Duck" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div id='homePage-physicsBox'>
-            <h2 className='homePage-boxesHeaders'>Physics</h2>
-            <div className='homePage-physicsImgNTextContainer'>
-              <div className='homePage-photoHalfBox'>
-                <img className='homePage-photo' src={magnet} alt="Magnet" />
-              </div>
-              <div className='homePage-textSideBox'>
-                <p className='homePage-textInsideBox'>
-                  Welcome to the Physics Exploration Page! Here you can delve into the fascinating world of physics, explore concepts from quantum mechanics to classical mechanics, and stay informed on the latest discoveries in the field. Whether you're a student, researcher, or just curious about how the universe works, our intuitive tools make it easy to find the knowledge you need. Start exploring and uncover the laws that govern everything around us!
-                </p>
-                <Link to='/physics' id='homePage-linktoPhysics'>Explore Physics</Link>
-              </div>
-            </div>
-          </div>
-
-          <div id='homePage-spacePartBackround'>
-            <div id='homePage-spaceBox'>
-              <h2 className='homePage-boxesHeaders'>News</h2>
-              <div className='homePage-spaceImgNTextContainer'>
-                <div className='homePage-textSideBox'>
-                  <p className='homePage-textInsideBox'>
-                    Welcome to the Space Exploration Page! Here you can dive into the wonders of the cosmos, explore planets, stars, and galaxies, and stay informed on the latest space discoveries. Whether you're a space enthusiast or just curious about the universe, our intuitive tools make it easy to find the information you seek. Start your journey and unlock the mysteries of the cosmos!
-                  </p>
-                  <div className='homePage-linktoSpaceContainer'> 
-                  <Link to='/space' id='homePage-linktoSpace'>Explore Space</Link>
-                  </div>
-                </div>
-                <div className='homePage-photoHalfBox'>
-                  <img className='homePage-photo' src={newsPaper} alt="Weird Alien" />
+                  <img className='homePage-photo' src={newsPaper} alt="Cool Duck" />
                 </div>
               </div>
             </div>

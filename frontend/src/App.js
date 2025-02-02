@@ -11,6 +11,7 @@ import FeedPage from './pages/FeedPage';
 import VisitProfilePage from './pages/VisitProfilePage';
 import SearchSuggestions from './pages/SearchSuggestions';
 import AboutPage from './pages/AboutPage';
+import ChartPage from './pages/ChartPage';
 
 function App() {
 
@@ -35,6 +36,7 @@ if (!isLoggedIn) {
         <Route path="visitProfilePage/:userId" element={isLoggedIn ? <VisitProfilePage/> : <LoginPage/>} />
         <Route path="searchSuggestions/:searchValue" element={isLoggedIn ? <SearchSuggestions/> : <LoginPage/>} />
         <Route path="about" element={isLoggedIn ? <AboutPage/> : <LoginPage/>}/>
+        <Route path="chartPage" element={isLoggedIn ? <ChartPage/> : <LoginPage/>}/>
       </Routes>
     </Router>
   );
