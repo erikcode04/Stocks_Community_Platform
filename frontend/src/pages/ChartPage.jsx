@@ -8,7 +8,7 @@ import Chart from "../components/Chart";
 
 
 const ChartPage = () => {
-    const [portfolio, setPortfolio] = useState([]);
+    const [portfolioData, setPortfolio] = useState([]);
 
  async function countStockMentions() {
         try {
@@ -23,7 +23,13 @@ const ChartPage = () => {
    
 
 
-
+    const portfolio = [
+        { name: "Apple", quantity: 2 },
+        { name: "Google", quantity: 3 },
+        { name: "Facebook", quantity: 1 },
+        { name: "Amazon", quantity: 4 },
+        { name: "Microsoft", quantity: 5 },
+        ];
 
 
     return (
@@ -31,6 +37,7 @@ const ChartPage = () => {
             <Navbar />
             <div className="container">
             <h1>Chart Page</h1>
+            <Chart portfolio={portfolio} />
             <button onClick={countStockMentions}>Count Stock Mentions</button>
             </div>
         </div>

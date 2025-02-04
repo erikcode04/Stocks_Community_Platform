@@ -9,6 +9,8 @@ router.post('/likePost', postsController.likePost);
 router.post('/unlikePost', postsController.unlikePost);
 router.get('/getPostsByUserId', postsController.getPostsByUserId);
 router.get('/getMorePostsByUserId', postsController.getMorePostsByUserId);
+router.get('/getMoreStockPostsByUserId', postsController.getMoreStockPostsByUserId);
+
 router.delete('/deletePost', postsController.deletePost);
 router.post("/uploadStockList", postsController.uploadStockList);
 router.get('/getPosts/:startIndex', postsController.getPosts);

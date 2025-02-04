@@ -31,6 +31,14 @@ const [postCurrentPage, setPostCurrentPage] = useState(1);
 const [postStartIndex, setPostStartIndex] = useState(0);
 const [postEndIndex, setPostEndIndex] = useState(5);
 
+const [stockPostostCurrentPage, setStockPostostCurrentPage] = useState(1);
+const [stockPostStartIndex, setStockPostStartIndex] = useState(0);
+const [stockPostEndIndex, setStockPostEndIndex] = useState(5);
+const stockPostStartIndexRef = useRef(5);
+const stockPostEndIndexRef = useRef(10);
+const stockScrolledPages = useRef(1);
+
+
 const postStartIndexRef = useRef(5);
 const postEndIndexRef = useRef(10);
 const scrolledPages = useRef(1);
@@ -62,8 +70,9 @@ async function getUserPosts() {
         setStockPosts(response.data.stockLists);
         setPostsPages(response.data.postCount);
         setStockPages(response.data.stockListCount);
-        console.log("response.data", response.data);
-        postStartIndexRef.current = response.data.postsLength -5;  
+        console.log("stockPostsLength", response.data.stockListLength);
+        postStartIndexRef.current = response.data.postsLength -5; 
+        stockPostStartIndexRef.current = response.data.stockListLength -5; 
     } catch (error) {
         console.error('Error getting posts:', error);
     }
@@ -151,13 +160,53 @@ if (postCurrentPage > 1) {
 }
 }
 
-const portfolio = [
-    { name: "Apple", quantity: 2 },
-    { name: "Google", quantity: 3 },
-    { name: "Facebook", quantity: 1 },
-    { name: "Amazon", quantity: 4 },
-    { name: "Microsoft", quantity: 5 },
-    ];
+//----------------------------------------------
+
+async function nextStockPostPageHandler() {
+    if (postsPages > 1){
+        if (stockPostostCurrentPage === stockPages) {
+            return;
+        }
+            
+    if (stockPages > stockScrolledPages.current) {
+    try {
+        const response = await axios.get("http://localhost:5000/posts/getMoreStockPostsByUserId", { params : { userId: userInfo.userId, startIndex: stockPostStartIndexRef.current } });
+        console.log("response", response);
+        setStockPosts([...stockPosts, ...response.data]);
+        stockScrolledPages.current += 1;
+       setStockPostostCurrentPage(stockPostostCurrentPage + 1);
+        stockPostStartIndexRef.current -= 5;
+        setStockPostStartIndex(stockPostStartIndex + 5);
+        setStockPostEndIndex(stockPostEndIndex + 5);
+        
+    } catch (error) {
+     console.error('Error getting more posts:', error);   
+    }
+}
+else {
+    setStockPostStartIndex(stockPostStartIndex + 5);
+    setStockPostEndIndex(stockPostEndIndex + 5);
+        setStockPostostCurrentPage(stockPostostCurrentPage + 1);
+        stockScrolledPages.current += 1;
+        stockPostStartIndexRef.current += 5;
+}
+}
+}
+
+function beforePageStockPostHandler() {
+    console.log("one");
+    console.log("stockPostostCurrentPage", stockPostostCurrentPage);
+if (stockPostostCurrentPage > 1) {
+    console.log("two", stockPosts);
+    console.log("stockPostStartIndex", stockPostStartIndex);
+    console.log("stockPostEndIndex", stockPostEndIndex);
+    setStockPostostCurrentPage(stockPostostCurrentPage - 1);
+    setStockPostStartIndex(stockPostStartIndex - 5);
+    setStockPostEndIndex(stockPostEndIndex - 5);
+    console.log("three", stockPosts);
+}
+}
+
 
 
 
@@ -168,7 +217,6 @@ const portfolio = [
             <h1>Profile</h1>
             <div className="profile-details">
             <div className="profilePage-chooseImageContainer">
-                <Chart portfolio={portfolio} />
             {chooseImage && <ChooseImage />}
             </div>
             <div className='profilePage-profilePictureContainer'>
@@ -206,7 +254,7 @@ const portfolio = [
                 <p className='profilePage-postsPageNumber'> {postsPages}</p>
                      </div>
                  </div> 
-                : <div> {stockPosts.slice(0,10).map(post => (
+                : <div> {stockPosts.slice(stockPostStartIndex, stockPostEndIndex).map(post => (
                     <div key={post._id} className="profilePage-post">
                         <h3 className='profilePage-postTitle' >{post.title}</h3>
                         <p className='profilePage-postTextArea' >{post.textAreaContent}</p>
@@ -218,9 +266,12 @@ const portfolio = [
                         ))}
                     </div>
                 ))} 
-                <div className='profilePage-changePageContainer'>
-                       <button className='profilePage-goTodNextPage' > Load More </button>
-                <button className='profilePage-goToBeforePage' > Load More </button>
+               <div className='profilePage-changePageContainer'>
+                    <p className='profilePage-postsPageNumber'>  1 </p>
+                <button className='profilePage-switchPostsPageButton' onClick={beforePageStockPostHandler}  > <FaArrowLeft/> </button>
+                <p className='profilePage-postsPageNumber'> {stockPostostCurrentPage} </p>
+                <button className='profilePage-switchPostsPageButton'onClick={nextStockPostPageHandler} > <FaArrowRight/> </button>
+                <p className='profilePage-postsPageNumber'> {stockPages}</p>
                      </div>
                  </div> }
         </div>

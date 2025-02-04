@@ -108,30 +108,30 @@ async function getPostsByUserId(userId) {
     .skip(postsLength - 5)
     .limit(5)
     .toArray();
+    const stockListLength = await db.collection('stockLists').find({ userId }).count();
         const stockLists = await db.collection('stockLists').find({ userId })
-        .skip(0)
+        .skip(stockListLength - 5)
         .limit(5).toArray();
-        const stockListLength = await db.collection('stockLists').find({ userId }).count();
         let stockListCount = stockListLength / 5;
         let postCount = postsLength / 5;
         let sendBack = {};
-        if (postCount === Math.floor(postCount) && postCount > 1) {
-            console.log('postCount is even', postCount);
-            postCount = postCount;
-            sendBack = {posts, stockLists, postCount, stockListCount, postsLength};
-            return sendBack;
+   
+
+        if (Math.floor(stockListCount) < stockListCount) {
+            stockListCount = Math.ceil(stockListCount);
         }
+
         if (Math.floor(postCount) < postCount) {
-            console.log('postCount is odd', postCount);
             postCount = Math.ceil(postCount);
         }
+
         if (postCount < 1) {
             postCount = 1;
         }
         if (stockListCount < 1) {
             stockListCount = 1;
         }
-        sendBack = {posts, stockLists, postCount, stockListCount, postsLength};
+        sendBack = {posts, stockLists, postCount, stockListCount, postsLength, stockListLength};
         return sendBack;
     } catch (error) {
         console.error('Error finding posts:', error);
@@ -148,7 +148,49 @@ async function getMorePostsByUserId(userId, startIndex) {
     try {
         console.log('startIndex inside getMorePostsByUserId', startIndex);
         startIndex = parseInt(startIndex);
+        if (startIndex - 5 < 0) {
+            const posts = await db.collection('posts').find({ userId }) 
+            .skip(0)
+            .limit(startIndex) 
+            .toArray();
+            console.log('Posts:', posts);
+            console.log('Postslength:', posts.length);
+            return posts;
+            
+        }
         const posts = await db.collection('posts').find({ userId }) 
+        .skip(startIndex - 5)
+        .limit(5) 
+        .toArray();
+        console.log('Posts:', posts);
+        console.log('Postslength:', posts.length);
+        return posts;
+    } catch (error) {
+        console.error('Error finding posts:', error);
+        throw error;
+    }
+}
+
+async function getMoreStockPostsByUserId(userId, startIndex) {
+    await connectDB();
+    const db = client.db();
+    if (!db) {
+        throw new Error('Failed to connect to the database');
+    }
+    try {
+        startIndex = parseInt(startIndex);
+        console.log('startIndex inside getMoreStockPostsByUserId', startIndex);
+        if (startIndex - 5 < 0) {
+            const posts = await db.collection('stockLists').find({ userId }) 
+            .skip(0)
+            .limit(startIndex) 
+            .toArray();
+            console.log('Posts:', posts);
+            console.log('Postslength:', posts.length);
+            return posts;
+            
+        }
+        const posts = await db.collection('stockLists').find({ userId }) 
         .skip(startIndex - 5)
         .limit(5) 
         .toArray();
@@ -314,5 +356,6 @@ module.exports = {
     deletePost,
     uploadStockList,
     getStocklists,
-    countStockMentions
+    countStockMentions,
+    getMoreStockPostsByUserId
 };
