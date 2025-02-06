@@ -363,6 +363,15 @@ async function getFriendStatus(userId){
     }
 }
 
+async function recommendedUsers(search){
+    await connectDB();
+const db = client.db();
+const users = await db.collection("users").find({ userName: { $regex: search, $options: 'i' } }).toArray();
+const recomendedUsers = users.splice(0, 5);
+console.log(recomendedUsers)
+return recomendedUsers;
+}
+
 
 
 
@@ -375,4 +384,5 @@ module.exports = {
     deleteAccount,
     recomendedSearches,
     getFriendStatus,
+    recommendedUsers,
 };

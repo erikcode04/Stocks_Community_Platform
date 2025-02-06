@@ -325,22 +325,79 @@ async function countStockMentions(userId) {
     if (!db) {
         throw new Error('Failed to connect to the database');
     }
+
+    function countMentions(allSymbols, symbol){
+        let count = 0;
+        allSymbols.forEach(element => {
+            if (element === symbol) {
+                count++;
+            }
+        });
+        return count;
+    }
+
+  
+
     try {
         const stockLists = await db.collection('stockLists').find({userId}).toArray();
     const allSymbols = [];
+    const finalList = [];
         stockLists.forEach(stockList => {
             stockList.stockArray.forEach(stock => {
                 allSymbols.push(stock.symbol);
             });
         });
-        console.log('All symbols:', allSymbols);
-        return count;
+        for (let index = 0; index < allSymbols.length; index++) {
+            const element = allSymbols[index];
+            console.log('element', element);
+            const count = countMentions(allSymbols, element);
+            const stock = { symbol: element, quantity : count };
+            finalList.push(stock);
+        }
+
+        for (let index = 0; index < finalList.length; index++) {
+            const element = finalList[index];
+            for (let index2 = 0; index2 < finalList.length; index2++) {
+                const element2 = finalList[index2];
+                if (element.symbol === element2.symbol && index !== index2) {
+                    finalList.splice(index2, 1);
+                }
+            }
+            
+        }
+        if (finalList.length >= 20 ) {
+            const orderedList = finalList.sort((a, b) => b.count - a.count);
+            const sendBack = orderedList.slice(0, 20);
+            return sendBack;
+        }
+      const sendBack = finalList;
+        return sendBack;
     } catch (error) {
         console.error('Error counting stock mentions:', error);
         throw error;
     }
 }
 
+async function suggestedPosts(search){
+    await connectDB();
+    const db = client.db();
+    if (!db) {
+        throw new Error('Failed to connect to the database');
+    }
+    const regex = new RegExp(search, "i"); 
+    try {
+        const posts = await db.collection('posts').find({ title: { $regex: regex } }).toArray();
+        const suggestedPosts = posts.slice(0, 5);
+        const stockPosts = await db.collection('stockLists').find({ "stockArray.symbol": 
+            { $regex: regex } }).toArray();
+            console.log('stockPosts', stockPosts);
+        const suggestedStockPosts = stockPosts.slice(0, 5);
+        return { suggestedPosts, suggestedStockPosts };
+    } catch (error) {
+        console.error('Error getting suggested posts:', error);
+        throw error;
+    }
+}
 
 
 
@@ -357,5 +414,6 @@ module.exports = {
     uploadStockList,
     getStocklists,
     countStockMentions,
-    getMoreStockPostsByUserId
+    getMoreStockPostsByUserId,
+    suggestedPosts
 };

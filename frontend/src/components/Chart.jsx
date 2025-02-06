@@ -1,11 +1,13 @@
 import React from "react";
 import { Chart } from "react-google-charts";
 
-const PortfolioChart = ({ portfolio }) => {
+const PortfolioChart = ({ portfolioData, title }) => {
+  console.log("portfolioData", portfolioData);
   const data = [
     ["Aktie", "Antal aktier"],
-    ...portfolio.map(stock => [stock.name, stock.quantity]),
+    ...portfolioData.map(stock => [stock.symbol, stock.quantity]),
   ];
+  console.log("data", data);
 
   return (
     <Chart
@@ -13,7 +15,7 @@ const PortfolioChart = ({ portfolio }) => {
       width="100%"
       height="400px"
       data={data}
-      options={{ title: "Min Portföljfördelning" }}
+    //  options={{ title }}
     />
   );
 };

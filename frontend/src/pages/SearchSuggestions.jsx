@@ -13,31 +13,30 @@ const SearchSuggestions = () => {
 
     useEffect(() => {
         
-        const fetchUsers = async () => {
-            // Replace with actual API call
-            setUsers([{ id: 1, name: 'User 1' }, { id: 2, name: 'User 2' }]);
-        };
-
-        const fetchPosts = async () => {
-            // Replace with actual API call
-            setPosts([{ id: 1, title: 'Post 1' }, { id: 2, title: 'Post 2' }]);
-        };
-
-        const fetchStockLists = async () => {
-            // Replace with actual API call
+        const fetchSuggestions = async () => {
             setStockLists([{ id: 1, name: 'Stock 1' }, { id: 2, name: 'Stock 2' }]);
+try {
+    const response = await axios.get(`http://localhost:5000/users/searchSuggestions/${searchValue}`);
+    console.log("response", response);
+    setUsers(response.data.users);
+    setPosts(response.data.suggestedPosts);
+    setStockLists(response.data.suggestedStockPosts);
+
+} catch (error) {
+    console.log("Error fetching search suggestions", error);
+}
+
+
         };
 
-        fetchUsers();
-        fetchPosts();
-        fetchStockLists();
+        fetchSuggestions();
     }, [searchValue]);
 
     return (
         <div> 
         <Navbar />
-        <div className="SearchSuggestions-container">
-            <h1>Search Results for: {searchValue}</h1>
+        <div className="SearchSuggestions-container">               
+            <h1>Search Results for: {searchValue}</h1>  
             <div className="SearchSuggestions-tabs">
                 <button onClick={() => setActiveTab('users')} className={activeTab === 'users' ? 'SearchSuggestions-active' : ''}>Users</button>
                 <button onClick={() => setActiveTab('posts')} className={activeTab === 'posts' ? 'SearchSuggestions-active' : ''}>Posts</button>
@@ -47,8 +46,8 @@ const SearchSuggestions = () => {
                 {activeTab === 'users' && (
                     <div className="SearchSuggestions-users">
                         {users.map(user => (
-                            <div key={user.id} className="SearchSuggestions-item">
-                                {user.name}
+                            <div key={user._id} className="SearchSuggestions-item">
+                                {user.userName}
                             </div>
                         ))}
                     </div>
@@ -56,7 +55,7 @@ const SearchSuggestions = () => {
                 {activeTab === 'posts' && (
                     <div className="SearchSuggestions-posts">
                         {posts.map(post => (
-                            <div key={post.id} className="SearchSuggestions-item">
+                            <div key={post._id} className="SearchSuggestions-item">
                                 {post.title}
                             </div>
                         ))}
@@ -66,7 +65,7 @@ const SearchSuggestions = () => {
                     <div className="SearchSuggestions-stockLists">
                         {stockLists.map(stock => (
                             <div key={stock.id} className="SearchSuggestions-item">
-                                {stock.name}
+                                {stock.userName}
                             </div>
                         ))}
                     </div>

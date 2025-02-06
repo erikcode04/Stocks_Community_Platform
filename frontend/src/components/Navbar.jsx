@@ -111,7 +111,7 @@ function Navbar() {
                     <li className='nav-listItem dropdown'>
                         <a href="#" className='dropbtn'>Categories</a>
                         <div className='dropdown-content'>
-                            <a href="/stocks">Stocks</a>
+                            <a href="/chartPage">chartPage</a>
                             <a href="/post">Post</a>
                             <button id='nav-LogOutButton' onClick={calllogOut}>Log Out</button>
                         </div>

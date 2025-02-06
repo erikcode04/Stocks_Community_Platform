@@ -1,6 +1,8 @@
 require("dotenv").config({ path: "./.env.local" });
 const usersService = require("../services/usersService");
+const postsService = require("../services/postsService");
 const jwt = require('jsonwebtoken');
+
 
 exports.setProfilePicture = async (req, res) => {
     const token = req.cookies.token;
@@ -213,4 +215,18 @@ exports.recomendedSearches = async (req, res) => {
     }
 }
 
+exports.searchSuggestions = async (req, res) => {
+    const searchValue = req.params.searchValue;
+    const users = await usersService.recommendedUsers(searchValue);
+    console.log("users inside searchSuggestions controller", users);
+const {suggestedPosts, suggestedStockPosts} = await postsService.suggestedPosts(searchValue);
+const sendBack = {users, suggestedPosts, suggestedStockPosts};
+console.log("sendBack inside searchSuggestions controller", sendBack);
+    if (sendBack) {
+        return res.json(sendBack);
+    } else {
+        return res.status(500).json({ message: "Failed to fetch data" });
+    }
+
+}
 

@@ -1,0 +1,25 @@
+.chartPage-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+
+.chartPage-portFolioTopsDescriptionContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40%;
+    padding: 20px;
+    border: solid 3px #273469;
+    border-radius: 100px;
+    background-color: white;
+    margin-top: 40px;
+}
+
+.chartPage-portfolioText{
+    color: #30343F;
+    font-size: 20px;
+    font-weight: bold;
+}

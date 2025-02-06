@@ -11,7 +11,6 @@ import { handleLogout } from '../agils/logOut';
 import { FaArrowRight } from "react-icons/fa6";
 import { FaArrowLeft } from "react-icons/fa6";
 import FriendsButton from '../components/FriendsButton';
-import Chart from "../components/Chart";
 
 
 
@@ -194,16 +193,11 @@ else {
 }
 
 function beforePageStockPostHandler() {
-    console.log("one");
-    console.log("stockPostostCurrentPage", stockPostostCurrentPage);
+
 if (stockPostostCurrentPage > 1) {
-    console.log("two", stockPosts);
-    console.log("stockPostStartIndex", stockPostStartIndex);
-    console.log("stockPostEndIndex", stockPostEndIndex);
     setStockPostostCurrentPage(stockPostostCurrentPage - 1);
     setStockPostStartIndex(stockPostStartIndex - 5);
     setStockPostEndIndex(stockPostEndIndex - 5);
-    console.log("three", stockPosts);
 }
 }
 

@@ -11,6 +11,7 @@ router.get('/visitProfile/:userId', usersController.visitProfile);
 router.delete('/deleteAccount', usersController.deleteAccount);
 router.post("/recomendedSearches", usersController.recomendedSearches);
 router.get('/getFriendStatus', usersController.getFriendStatus);
+router.get("/searchSuggestions/:searchValue", usersController.searchSuggestions);
 
 
 
