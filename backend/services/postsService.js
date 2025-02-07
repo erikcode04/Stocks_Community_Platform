@@ -386,12 +386,35 @@ async function suggestedPosts(search){
     }
     const regex = new RegExp(search, "i"); 
     try {
-        const posts = await db.collection('posts').find({ title: { $regex: regex } }).toArray();
-        const suggestedPosts = posts.slice(0, 5);
-        const stockPosts = await db.collection('stockLists').find({ "stockArray.symbol": 
-            { $regex: regex } }).toArray();
-            console.log('stockPosts', stockPosts);
-        const suggestedStockPosts = stockPosts.slice(0, 5);
+        const posts = await db.collection('posts').find({ title: { $regex: regex } }).limit(5).toArray();
+        const userIdsForPosts = posts.map(post => post.userId);
+        const usersForPosts = await db.collection('users').find({ _id: { $in: userIdsForPosts.map(id => new ObjectId(id)) } }).toArray();
+        const suggestedPosts = [];
+        for (let index = 0; index < posts.length; index++) {
+            const post = posts[index];
+        const user = usersForPosts.find(user => user._id.toString() === post.userId);
+        const sanitizedUser = {userName : user.userName, profilePicture : user.profilePicture };
+        suggestedPosts.push({ ...post, sanitizedUser });  
+        console.log('suggestedPosts inside loop', suggestedPosts);
+        }
+
+
+
+        const stockPosts = await db.collection("stockLists").find({
+            "stockArray.symbol": { $regex: regex } 
+          }).sort({uploadDate : -1 }).limit(5).toArray();       
+            const userIdsForStockPosts = stockPosts.map(post => post.userId);
+            const usersForStockPosts = await db.collection('users').find({ _id: { $in: userIdsForStockPosts.map(id => new ObjectId(id)) } }).toArray();
+            const suggestedStockPosts = [];
+            for (let index = 0; index < stockPosts.length; index++) {
+                const post = stockPosts[index];
+            const user = usersForStockPosts.find(user => user._id.toString() === post.userId);
+            const sanitizedUser = {userName : user.userName, profilePicture : user.profilePicture };
+            suggestedStockPosts.push({...post , sanitizedUser});
+            console.log('suggestedStockPosts inside loop', suggestedStockPosts);
+            }
+            console.log('suggestedPosts', suggestedPosts);
+
         return { suggestedPosts, suggestedStockPosts };
     } catch (error) {
         console.error('Error getting suggested posts:', error);

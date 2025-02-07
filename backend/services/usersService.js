@@ -368,8 +368,9 @@ async function recommendedUsers(search){
 const db = client.db();
 const users = await db.collection("users").find({ userName: { $regex: search, $options: 'i' } }).toArray();
 const recomendedUsers = users.splice(0, 5);
-console.log(recomendedUsers)
-return recomendedUsers;
+const sanitizedUsers = recomendedUsers.map(user => ({ userName: user.userName, profilePicture: user.profilePicture, userId: user._id }));
+console.log(sanitizedUsers)
+return sanitizedUsers;
 }
 
 
