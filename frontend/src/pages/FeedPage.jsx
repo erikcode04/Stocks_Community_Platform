@@ -21,12 +21,21 @@ const FeedPage = () => {
     const [isFetching, setIsFetching] = useState(false);
     const [isTimerActive, setIsTimerActive] = useState(false);
 
-    async function fetchPosts() {
-        const response = await axios("http://localhost:5000/posts/getPosts/0");
-        const data = await response.data;
-        normalPostsStartIndex.current = 10;
-        setPosts(data.reverse());
+
+
+    async function startFetch() {
+        try {
+            const response = await axios("http://localhost:5000/posts/startFetchForFeedPage");
+            console.log("response", response);
+            setPosts(response.data.posts.reverse());
+            normalPostsStartIndex.current = response.data.startIndex;
+        } 
+        catch (error) {
+            console.error(error);
+        }
     }
+
+
 
     async function likePost(post) {
         const response = await axios.post("http://localhost:5000/posts/likePost", { postId: post._id, userId: userInfo.userId });
@@ -74,7 +83,7 @@ const FeedPage = () => {
     }
 
     useEffect(() => {
-        fetchPosts();
+        startFetch();
         const debouncedHandleScroll = debounce(handleScroll, 200);
         window.addEventListener('scroll', debouncedHandleScroll);
         return () => window.removeEventListener('scroll', debouncedHandleScroll);
@@ -146,7 +155,7 @@ const FeedPage = () => {
                 return;
             }
             setPosts(prevPosts => [...prevPosts, ...response.data]);
-            normalPostsStartIndex.current += 10;
+            normalPostsStartIndex.current -= 10;
             console.log("stockPostsStartIndex", normalPostsStartIndex.current);
         } catch (error) {
             console.error("Error fetching more posts.", error);
@@ -224,8 +233,8 @@ const FeedPage = () => {
                 
             </div>
             {userInfo.userId && <Link className="feedPage-createPostButton" to="/post">
-            <div class="svg-wrapper-1">
-    <div class="svg-wrapper">
+            <div className="svg-wrapper-1">
+    <div className="svg-wrapper">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"

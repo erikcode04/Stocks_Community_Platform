@@ -23,6 +23,78 @@ async function post( subject, userId ,title, textAreaContent) {
 
 }
 
+async function startFetchForFeedPage() {
+    console.log('startFetchForFeedPage function inside postsService');
+    await connectDB();
+    const db = client.db();
+    if (!db) {
+        throw new Error('Failed to connect to the database');
+    }
+    try {
+        const postsLength = await db.collection('posts').find().count();
+        console.log('postsLength', postsLength);
+        const latestDocuments = await db.collection("posts").find()
+        .skip(postsLength - 10)
+        .limit(10)
+        .toArray();
+        if (latestDocuments.length === 0) {
+            throw new Error('No posts found');
+        }
+        console.log('latestDocuments', latestDocuments);
+       const userIds = latestDocuments.map(post => post.userId);
+       const objectIdArray = userIds.map(id => new ObjectId(id));
+       const users = await db.collection('users').find({ _id: { $in: objectIdArray } }).toArray(); 
+       const sanitizedUsers = users.map(user => {
+        const { hashedPassword, ...sanitizedUser } = user;
+        return sanitizedUser;
+    });
+        let posts = [];
+     for (let post of  latestDocuments) {
+            const user = sanitizedUsers.find(user => user._id.toString() === post.userId);
+            post.user = user;
+            posts.push(post);
+        }
+       const stockListsLength = await db.collection('stockLists').find().count();
+       console.log('stockListsLength before action', stockListsLength);
+    let stockLists;
+       if (stockListsLength < 10) {
+         stockLists = await db.collection('stockLists').find().toArray();
+       }
+     
+       else {
+         stockLists = await db.collection('stockLists').find()
+        .skip(stockListsLength)
+        .limit(10)
+        .toArray();
+         }
+         console.log('sockListsCollected', stockLists);
+        if (stockLists.length === 0) {
+            throw new Error('No stock lists found');
+        }
+        console.log('stockLists', stockLists);
+         const userIdsForStockLists = stockLists.map(stockList => stockList.userId);
+         console.log('userIdsForStockLists', userIdsForStockLists);
+            const objectIdArrayForStockLists = userIdsForStockLists.map(id => new ObjectId(id));
+            const usersForStockLists = await db.collection('users').find({ _id: { $in: objectIdArrayForStockLists } }).toArray();
+            const sanitizedUsersForStockLists = usersForStockLists.map(user => {
+                const { hashedPassword, ...sanitizedUser } = user;
+                return sanitizedUser;
+            });
+            for (let stockList of stockLists) {
+                const user = sanitizedUsersForStockLists.find(user => user._id.toString() === stockList.userId);
+                stockList.user = user;
+            }
+        console.log('StockLists:', stockLists);
+      console.log('finishLine!!!!!1:');
+      const startIndex = postsLength - 20;
+        return { posts, stockLists, startIndex };
+    } catch (error) {
+        console.error('Error finding posts:', error);
+        throw error;
+    }
+}
+
+
 async function getPosts(startIndex) {
     await connectDB();
     const db = client.db();
@@ -32,7 +104,6 @@ async function getPosts(startIndex) {
     try {
         console.log('startIndex inside getPosts', startIndex);
         const latestDocuments = await db.collection("posts").find()
-        .sort({ uploadDate: -1 })
         .skip(parseInt(startIndex))
         .limit(10)
         .toArray();
@@ -397,6 +468,7 @@ async function suggestedPosts(search){
         suggestedPosts.push({ ...post, sanitizedUser });  
         console.log('suggestedPosts inside loop', suggestedPosts);
         }
+        
 
 
 
@@ -438,5 +510,6 @@ module.exports = {
     getStocklists,
     countStockMentions,
     getMoreStockPostsByUserId,
-    suggestedPosts
+    suggestedPosts,
+    startFetchForFeedPage
 };
