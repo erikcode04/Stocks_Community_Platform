@@ -4,6 +4,20 @@ const postsService = require("../services/postsService");
 const jwt = require('jsonwebtoken');
 
 
+exports.getUserName = async(req, res) => {
+     console.log("here", req.cookies);
+     const token = req.cookies.token;
+     try{
+     const decoded = jwt.verify(token, process.env.JWT_SECRET)
+      return res.json(decoded.userName);
+     }
+   catch{
+    console.log("iqweijoqe")
+   }
+
+}
+
+
 exports.setProfilePicture = async (req, res) => {
     const token = req.cookies.token;
     if (!token) {

@@ -28,7 +28,8 @@ const FeedPage = () => {
             const response = await axios("http://localhost:5000/posts/startFetchForFeedPage");
             console.log("response", response);
             setPosts(response.data.posts.reverse());
-            normalPostsStartIndex.current = response.data.startIndex;
+            normalPostsStartIndex.current = response.data.startIndexForPosts;
+            stockPostsStartIndex.current = response.data.startIndexForStockPosts;
         } 
         catch (error) {
             console.error(error);
@@ -140,6 +141,7 @@ const FeedPage = () => {
     }
 
     async function fetchMoreNormalPosts() {
+        console.log("fetchMoreNormalPosts");
         setLoading(true);
         setIsFetching(true);
         setIsTimerActive(true);

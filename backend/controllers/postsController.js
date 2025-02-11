@@ -18,9 +18,9 @@ exports.post = async (req, res) => {
 exports.startFetchForFeedPage = async (req, res) => {
     try {
         console.log("we found the route")
-        const {posts, stockLists, startIndex} = await postsService.startFetchForFeedPage();
+        const {posts, stockLists, startIndexForPosts, startIndexForStockPosts} = await postsService.startFetchForFeedPage();
         console.log("payback", stockLists, posts );
-        res.status(200).json({ posts, stockLists, startIndex });
+        res.status(200).json({ posts, stockLists, startIndexForPosts, startIndexForStockPosts });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

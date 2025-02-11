@@ -9,13 +9,28 @@ import topImage from "../assets/business.png";
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../agils/checkAuth';
 import FriendsButton from '../components/FriendsButton';
+import axios from 'axios';
 
 function HomePage() {
 
   const { userInfo } = useContext(AuthContext);
   const boxesContainerRef = useRef(null);
+  const [userName, setUserName] = useState(null);
   const [showFriends, setShowFriends] = useState(true);
+  
+
+async function getUserName(){
+  try {
+    const response = await axios("http://localhost:5000/users/getUserName", {withCredentials : true})
+    console.log("response",response)
+    setUserName(response.data)
+  } catch (error) {
+    console.log("error", error);
+  }
+}
+
   useEffect(() => {
+    getUserName()
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -50,7 +65,7 @@ function HomePage() {
           <img id='homePage-topImage' src={topImage} alt="Business" />
           </div>    
             <div className='homePage-basicBox'>
-       {userInfo && <h1 id='homePage-header'>Hello {userInfo.userName} </h1>}
+       {userInfo && <h1 id='homePage-header'>Hello {userName} </h1>}
         <p id='homePage-welcomingText'>There is always facts about stocks to share or read about</p>
         </div>
     

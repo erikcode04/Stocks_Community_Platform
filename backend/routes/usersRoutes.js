@@ -5,6 +5,7 @@ const router = express.Router();
 
 
 router.post('/setProfilePicture', usersController.setProfilePicture);
+router.get("/getUserName", usersController.getUserName);
 router.post('/friendStatusLogic', usersController.friendStatusLogic);
 router.post('/search/:search', usersController.search);
 router.get('/visitProfile/:userId', usersController.visitProfile);

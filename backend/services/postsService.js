@@ -84,10 +84,21 @@ async function startFetchForFeedPage() {
                 const user = sanitizedUsersForStockLists.find(user => user._id.toString() === stockList.userId);
                 stockList.user = user;
             }
-        console.log('StockLists:', stockLists);
-      console.log('finishLine!!!!!1:');
-      const startIndex = postsLength - 20;
-        return { posts, stockLists, startIndex };
+      let startIndexForPosts
+     let startIndexForStockPosts
+     if (postsLength < 20) {
+        startIndexForPosts = 0;
+     }
+     else {
+       startIndexForPosts = postsLength - 20;
+        }
+        if (stockListsLength < 20) {
+            startIndexForStockPosts = 0;
+        }
+        else {
+       startIndexForStockPosts = stockListsLength - 20;
+        }
+        return { posts, stockLists, startIndexForPosts, startIndexForStockPosts };
     } catch (error) {
         console.error('Error finding posts:', error);
         throw error;
@@ -103,10 +114,18 @@ async function getPosts(startIndex) {
     }
     try {
         console.log('startIndex inside getPosts', startIndex);
-        const latestDocuments = await db.collection("posts").find()
+        const postsLength = await db.collection("posts").find().count();
+        console.log('postsLength inside getPosts', postsLength);
+        let latestDocuments;
+        if (postsLength < 10){
+             latestDocuments = await db.collection("posts").find().toArray();
+        }
+        else{
+         latestDocuments = await db.collection("posts").find()
         .skip(parseInt(startIndex))
         .limit(10)
         .toArray();
+        }
         if (latestDocuments.length === 0) {
             throw new Error('No posts found');
         }
@@ -119,7 +138,7 @@ async function getPosts(startIndex) {
         return sanitizedUser;
     });
         let posts = [];
-     for (let post of  latestDocuments) {
+     for (let post of latestDocuments) {
             const user = sanitizedUsers.find(user => user._id.toString() === post.userId);
             post.user = user;
             posts.push(post);
@@ -361,7 +380,6 @@ async function getStocklists(startIndex) {
     }
     try {
         const latestDocuments = await db.collection("stockLists").find()
-        .sort({ uploadDate: -1 })
         .skip(parseInt(startIndex))
         .limit(10)
         .toArray();
