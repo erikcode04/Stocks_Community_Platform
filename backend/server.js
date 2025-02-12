@@ -4,25 +4,27 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const postsRoutes = require('./routes/postsRoutes');
 const usersRoutes = require('./routes/usersRoutes');
-const { connectDB, client } = require('./config/db'); // Adjust the path if necessary
+const graphsRoutes = require('./routes/graphRoutes');
+const { connectDB, client } = require('./config/db'); 
 const cookieParser = require('cookie-parser');
 
 
 const app = express();
 
-// Middleware
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(cors({
-  origin: 'http://localhost:3000', // Replace with your frontend URL
+  origin: 'http://localhost:3000',
   credentials: true
 }));
 
 app.use('/auth', authRoutes);
 app.use('/posts', postsRoutes);
 app.use("/users", usersRoutes);
-// Connect to MongoDB
+app.use("/graph", graphsRoutes);
+
 connectDB();
 
 // Define routes
@@ -30,7 +32,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-// Example route using the connected client
+
 
 
 app.post('/test', async (req, res) => {

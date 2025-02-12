@@ -5,6 +5,8 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import FriendsButton from "../components/FriendsButton";
 import PortfolioChart from "../components/Chart";
+import LineChart from "../components/LineChart";
+import MakePrediction from "../components/MakePrediction";
 import "../styles/chartPage.css";
 
 const ChartPage = () => {
@@ -23,6 +25,7 @@ const ChartPage = () => {
     countStockMentions();
   }, []);
 
+
   return (
     <div>
       <Navbar />
@@ -39,10 +42,12 @@ const ChartPage = () => {
                 Here you can see the stocks you have been talking about the most.
                 The more you talk about a stock, the bigger the slice of the pie
             </p>
-        </div>
+                   </div>
+                  
+  <MakePrediction />
       </div>
      <FriendsButton />
-      <Footer />
+      <Footer />  
     </div>
   );
 };
