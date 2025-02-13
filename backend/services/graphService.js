@@ -27,19 +27,20 @@ async function checkIfSymbolIsValid (symbol) {
 
 
 
-async function uploadStockPredictionq(stockSymbol, year1, year2, year3, year4, year5) {
+async function uploadStockPredictionq(userId, stockSymbol, years) {
     try {
-        const response = await axios.post("http://localhost:5000/graphs/uploadStockPrediction", {
-            stockSymbol,
-            year1,
-            year2,
-            year3,
-            year4,
-            year5
-        });
+        await connectDB();
+        const db = client.db();
+        const collection = db.collection("stockPredictions");
+        const todaysDate = new Date();
+        const stockPrediction = { userId, stockSymbol, years, todaysDate };
+        const response = await collection.insertOne(stockPrediction);
         console.log(response);
+        const status = 1
+        return status;
     } catch (error) {
-        console.error(error);
+        console.log(error);
+        return error;
     }
 }
 

@@ -2,12 +2,13 @@ import React, {useState} from "react";
 import axios from "axios";
 import LineChart from "./LineChart";
 import "./componentStyles/makePrediction.css"
+import { FaCloudUploadAlt } from "react-icons/fa";
+
 
 
 const MakePrediction =  () => {
  const [stockSymbol, setStockSymbol] = useState("");
  const [step, setStep] = useState(1);
- const [price, setPrice] = useState(0);
  const [years, setYears] = useState({
     yearOne: { year: new Date().getFullYear(), price: 0 },
     yearTwo: { year: new Date().getFullYear() + 1, price: 0 },
@@ -34,6 +35,16 @@ const updateYearOnePrice = (newPrice) => {
         }
     }));
 };
+
+async function submitPrediction(){
+ console.log("we here", years)
+ try {
+    const response = await axios.post("http://localhost:5000/graph/uploadStockPrediction", { stockSymbol, years }, {withCredentials: true});
+    console.log(response);
+ } catch (error) {
+    console.error(error);
+ }
+}
  
 
  async function getStockData(e) {
@@ -60,16 +71,18 @@ return (
 }
 {step === 2 && <div id="makePrediction-secondStepContainer">
 <button onClick={() => setStep(step -1)} className="makePrediction-goBackButton" > back</button>
+  
        <h2> stock lowest value in a five years series</h2>
-       <form onSubmit={getStockData}>
+       <form onSubmit={getStockData} className="makePrediction-centreMainContent">
             <input 
                 type="text" 
                 placeholder="Enter the stock symbol" 
                 value={stockSymbol} 
                 onChange={(e) => setStockSymbol(e.target.value)} 
+                className="makePrediction-input"
                 required
             />
-            <button type="submit">Next</button>
+            <button className="makePrediction-goNextButton" type="submit">Next</button>
         </form>
 </div>
 }
@@ -77,26 +90,29 @@ return (
 <button onClick={() => setStep(step -1)} className="makePrediction-goBackButton" > back</button>
     <h2> Enter the stock prices for the next five years </h2>
     <h3> {stockSymbol} price: {years.yearOne.price} </h3>
-    <form onSubmit={() => setStep(4)} >
+    <form className="makePrediction-centreMainContent" onSubmit={() => setStep(4)} >
             <input 
                 type="number" 
                 placeholder="Year 2" 
                 value={years.yearTwo.price} 
                 onChange={(e) => handleYearChange('yearTwo', 'price', e.target.value)} 
+                 className="makePrediction-input"
             />
             <input 
                 type="number" 
                 placeholder="Year 3" 
                 value={years.yearThree.price} 
                 onChange={(e) => handleYearChange('yearThree', 'price', e.target.value)} 
+                className="makePrediction-input"
             />
             <input 
                 type="number" 
                 placeholder="Price 4" 
                 value={years.yearFour.price} 
                 onChange={(e) => handleYearChange('yearFour', 'price', e.target.value)} 
+                className="makePrediction-input"
             />
-    <button type="submit" > Next </button>
+    <button className="makePrediction-goNextButton" type="submit" > Next </button>
     </form>
 
 </div>
@@ -105,7 +121,8 @@ return (
 <button onClick={() => setStep(step -1)} className="makePrediction-goBackButton" > back</button>
 <LineChart years={years} />
 <div id="makePrediction-submitButtonContainer">
-    <button className="makePrediction-submitButton">  Submit </button>
+    <button className="makePrediction-submitButton" onClick={submitPrediction} > <FaCloudUploadAlt size={30} />
+ </button>
     </div>  
     </div>
 }

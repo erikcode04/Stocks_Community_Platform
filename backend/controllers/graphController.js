@@ -22,15 +22,20 @@ exports.checkIfSymbolIsValid = async (req, res) => {
 }
 exports.uploadStockPrediction = async (req, res) => {
     try {
+        console.log("hello")
         const token = req.cookies.token;
         if (!token) {
         return res.status(401).json({ message: "Unauthorized" });
         }
+        console.log("we made it here", token);
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const { stockSymbol, year1, year2, year3, year4, year5 } = req.body;
-        console.log("stock prediction controller", stockSymbol, year1, year2, year3, year4, year5);
+        const userId = decoded.userId;
+        console.log("decoded", decoded);    
+        const { stockSymbol, years, } = req.body;
+        console.log("stock prediction controller", stockSymbol, years);
+         await graphServices.uploadStockPredictionq(userId, stockSymbol, years);
         res.status(200).json({ message: "Stock prediction uploaded successfully" });
     } catch (error) {
         res.status(400).json({ message: error.message });
-    }
+    }   
     }
