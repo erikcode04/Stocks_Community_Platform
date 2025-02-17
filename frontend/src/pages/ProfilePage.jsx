@@ -221,7 +221,7 @@ if (stockPostostCurrentPage > 1) {
             </button>
                 <p><strong>Username:</strong> {userInfo.userName}</p>
                 <p><strong>Email:</strong> {userInfo.email}</p>
-                <p><strong>Joined:</strong> {new Date(userInfo.joinedDate).toLocaleDateString()}</p>
+                <p><strong>Joined:</strong> {userInfo.joinedDate}</p>
             </div>
             <Link to="/chartPage" className="profilePage-chartLink"> Go to Chart Page </Link>
             <div className="profilePage-posts">

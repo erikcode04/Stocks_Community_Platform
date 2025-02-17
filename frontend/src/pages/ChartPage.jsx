@@ -11,6 +11,7 @@ import "../styles/chartPage.css";
 
 const ChartPage = () => {
   const [portfolioData, setPortfolio] = useState([]);
+  const [showPieChart, setShowPieChart] = useState(false);
 
   useEffect(() => {
     async function countStockMentions() {
@@ -36,13 +37,8 @@ const ChartPage = () => {
                 The more you talk about a stock, the bigger the slice of the pie
             </p>
         </div>
-      {portfolioData && <PortfolioChart portfolioData={portfolioData} title="Dina mest omtalade aktier" />}
-      <div className="chartPage-portFolioTopsDescriptionContainer" >
-            <p className="chartPage-portfolioText" > 
-                Here you can see the stocks you have been talking about the most.
-                The more you talk about a stock, the bigger the slice of the pie
-            </p>
-                   </div>
+      {showPieChart  && portfolioData && <PortfolioChart portfolioData={portfolioData} title="Dina mest omtalade aktier" />}
+      {!showPieChart &&  <button onClick={() => setShowPieChart(true)} className="chartPage-showPortfolioButton">Visa portfölj</button>}
                   
   <MakePrediction />
       </div>

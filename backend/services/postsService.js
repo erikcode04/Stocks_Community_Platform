@@ -57,13 +57,13 @@ async function startFetchForFeedPage() {
        const stockListsLength = await db.collection('stockLists').find().count();
        console.log('stockListsLength before action', stockListsLength);
     let stockLists;
-       if (stockListsLength < 10) {
+       if (stockListsLength <= 10) {
          stockLists = await db.collection('stockLists').find().toArray();
        }
      
        else {
          stockLists = await db.collection('stockLists').find()
-        .skip(stockListsLength)
+        .skip(stockListsLength - 10)
         .limit(10)
         .toArray();
          }

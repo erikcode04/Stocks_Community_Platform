@@ -5,7 +5,17 @@
     padding: 20px;
 }
 
-
+.chartPage-showPortfolioButton{    
+margin: 2rem;
+width: 200px;
+height: 50px;
+background-color: #30343F;
+color: white;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+font-size: large;
+}
 .chartPage-portFolioTopsDescriptionContainer{
     display: flex;
     flex-direction: column;

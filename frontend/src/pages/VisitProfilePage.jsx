@@ -56,7 +56,7 @@ async function FriendStatusHandler() {
 useEffect(() => {
   prepareProfile();
 }
-, []);
+, [userId]);
 
 
 

@@ -3,13 +3,14 @@ import axios from "axios";
 import LineChart from "./LineChart";
 import "./componentStyles/makePrediction.css"
 import { FaCloudUploadAlt } from "react-icons/fa";
+import Telescopes from "../assets/Telescopes.png";
 
 
 
 const MakePrediction =  () => {
  const [stockSymbol, setStockSymbol] = useState("");
  const [step, setStep] = useState(1);
- const [years, setYears] = useState({
+  const [years, setYears] = useState({
     yearOne: { year: new Date().getFullYear(), price: 0 },
     yearTwo: { year: new Date().getFullYear() + 1, price: 0 },
     yearThree: { year: new Date().getFullYear() + 2, price: 0 },
@@ -41,6 +42,9 @@ async function submitPrediction(){
  try {
     const response = await axios.post("http://localhost:5000/graph/uploadStockPrediction", { stockSymbol, years }, {withCredentials: true});
     console.log(response);
+    if (response.status === 200) {
+        setStep(1);
+    }
  } catch (error) {
     console.error(error);
  }
@@ -65,7 +69,11 @@ try {
 return (
 <div id="makePrediction-container">
 {step === 1 && <div id="makePrediction-startOffContainer">
-   <h2> Make a stock prediction </h2>
+
+   <h1> Make a stock prediction </h1>
+   <div id="makePrediction-ImgContainer">
+<img src={Telescopes} alt="telescopes" id="makePrediction-telescopesImage" />
+</div>
 <button className="makePrediction-goNextButton" onClick={() => setStep(2)}> Lets go!!</button>
 </div>
 }
